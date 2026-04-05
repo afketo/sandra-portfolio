@@ -12,6 +12,8 @@ const hasError = Astro.url.searchParams.get('error') === '1';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sandra Gonzalez</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Netlify Identity: procesa tokens de invitación y recuperación de contraseña -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body class="lock-body">
     <div class="lock-container">
@@ -32,6 +34,17 @@ const hasError = Astro.url.searchParams.get('error') === '1';
         <button type="submit" class="lock-submit">Entrar</button>
       </form>
     </div>
+
+    <script>
+      // Si hay un token de invitación o recuperación en la URL,
+      // el widget de Netlify Identity lo detecta y abre el modal automáticamente.
+      // Una vez que Sandra establece su contraseña, la redirigimos al admin.
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('login', () => {
+          window.location.href = '/admin/';
+        });
+      }
+    </script>
   </body>
 </html>
 
