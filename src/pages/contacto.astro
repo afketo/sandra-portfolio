@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-let siteConfig = { email: '', instagram: '', linkedin: '', behance: '' };
+let siteConfig = { email: '', instagram: '', linkedin: '', behance: '', contactIntro: '¿Tienes un proyecto en mente? Cuéntame.' };
 try {
   const raw = readFileSync(join(process.cwd(), 'src/content/config/site.json'), 'utf-8');
   siteConfig = { ...siteConfig, ...JSON.parse(raw) };
@@ -13,9 +13,7 @@ try {
 <Layout title="Sandra González — Contacto">
   <div class="contact-wrapper">
     <h1>Contacto</h1>
-    <p class="contact-intro">
-      ¿Tienes un proyecto en mente? Cuéntame.
-    </p>
+    <p class="contact-intro">{siteConfig.contactIntro}</p>
 
     <a href={`mailto:${siteConfig.email}`} class="contact-email">
       {siteConfig.email}
@@ -52,22 +50,22 @@ try {
     font-size: clamp(3.5rem, 8vw, 7rem);
     font-weight: 400;
     line-height: 1;
-    color: #F5F5F0;
+    color: var(--fg);
     margin-bottom: 2rem;
   }
 
   .contact-intro {
     font-size: 1.1rem;
-    color: rgba(245, 245, 240, 0.5);
+    color: var(--fg-muted);
     margin-bottom: 3rem;
   }
 
   .contact-email {
     display: block;
     font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-    color: #F5F5F0;
+    color: var(--fg);
     text-decoration: none;
-    border-bottom: 1px solid rgba(245, 245, 240, 0.15);
+    border-bottom: 1px solid var(--border);
     padding-bottom: 0.5rem;
     margin-bottom: 4rem;
     transition: border-color 0.2s;
@@ -75,7 +73,7 @@ try {
   }
 
   .contact-email:hover {
-    border-color: rgba(245, 245, 240, 0.6);
+    border-color: var(--border-strong);
   }
 
   .contact-socials {
@@ -87,12 +85,12 @@ try {
     font-size: 0.8rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(245, 245, 240, 0.4);
+    color: var(--fg-secondary);
     text-decoration: none;
     transition: color 0.2s;
   }
 
   .social-link:hover {
-    color: #F5F5F0;
+    color: var(--fg);
   }
 </style>

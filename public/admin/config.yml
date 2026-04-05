@@ -23,16 +23,18 @@ collections:
           - { label: "Instagram URL", name: "instagram", widget: "string", required: false }
           - { label: "LinkedIn URL", name: "linkedin", widget: "string", required: false }
           - { label: "Behance URL", name: "behance", widget: "string", required: false }
-          - label: "🏠 Hero (Portada)"
-            name: "heroLabel"
-            widget: "object"
-            collapsed: false
-            fields:
-              - { label: "Línea 1 (pequeña)", name: "heroLine1", widget: "string", hint: "Ej: Hola! soy" }
-              - { label: "Línea 2 — Nombre (grande)", name: "heroLine2", widget: "string", hint: "Ej: Sandra González" }
-              - { label: "Línea 3 — Rol", name: "heroLine3", widget: "string", hint: "Ej: product designer" }
-              - { label: "Línea 4 — Descripción", name: "heroLine4", widget: "text", hint: "Párrafo largo bajo el nombre" }
-              - { label: "Imagen de fondo", name: "heroBgImage", widget: "image", required: false, hint: "Imagen que aparece detrás del texto del hero. Déjalo vacío para fondo liso." }
+          - { label: "─── 🏠 HERO ───────────────", name: "heroSep", widget: "hidden", default: "" }
+          - { label: "Hero — Línea 1 (pequeña)", name: "heroLine1", widget: "string", hint: "Ej: Hola! soy" }
+          - { label: "Hero — Nombre (grande)", name: "heroLine2", widget: "string", hint: "Ej: Sandra González" }
+          - { label: "Hero — Rol", name: "heroLine3", widget: "string", hint: "Ej: product designer" }
+          - { label: "Hero — Descripción", name: "heroLine4", widget: "text", hint: "Párrafo bajo el nombre" }
+          - { label: "Hero — Imagen de fondo", name: "heroBgImage", widget: "image", required: false, hint: "Imagen detrás del texto. Déjalo vacío para fondo liso." }
+          - { label: "─── 👩 SOBRE MÍ ────────────", name: "aboutSep", widget: "hidden", default: "" }
+          - { label: "Sobre mí — Intro", name: "aboutIntro", widget: "text", hint: "Primera frase destacada" }
+          - { label: "Sobre mí — Texto", name: "aboutBody", widget: "text", hint: "Párrafo principal" }
+          - { label: "Sobre mí — Foto", name: "aboutImage", widget: "image", required: false, hint: "Tu foto de perfil" }
+          - { label: "─── 📬 CONTACTO ────────────", name: "contactSep", widget: "hidden", default: "" }
+          - { label: "Contacto — Texto intro", name: "contactIntro", widget: "string", hint: "Frase bajo el título de contacto" }
 
   - name: "trabajos"
     label: "💼 Trabajos"

@@ -1,5 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+let site = { aboutIntro: '', aboutBody: '', aboutImage: '/images/sandra-gonzalez.jpg', linkedin: '' };
+try {
+  const raw = readFileSync(join(process.cwd(), 'src/content/config/site.json'), 'utf-8');
+  site = { ...site, ...JSON.parse(raw) };
+} catch {}
 ---
 
 <Layout title="Sandra González — Sobre mí" fullbleed={true}>
@@ -27,29 +35,26 @@ import Layout from '../layouts/Layout.astro';
   <div class="about-body-section sg-inner">
     <div class="about-grid">
       <div class="about-text">
-        <p class="about-intro">
-          Diseñadora UI/UX con más de 5 años de experiencia creando experiencias digitales
-          que equilibran estética y funcionalidad.
-        </p>
-        <p class="about-body">
-          Trabajo con startups y empresas consolidadas para transformar ideas complejas
-          en interfaces claras, intuitivas y visualmente memorables. Mi proceso parte
-          siempre de la investigación y termina en el detalle más pequeño del píxel.
-        </p>
+        <p class="about-intro">{site.aboutIntro}</p>
+        <p class="about-body">{site.aboutBody}</p>
         <div class="about-links">
           <a href="/contacto" class="about-cta">Hablemos</a>
-          <a href="https://linkedin.com/in/sandragonzalez" target="_blank" rel="noopener" class="about-link">
-            LinkedIn →
-          </a>
+          {site.linkedin && (
+            <a href={site.linkedin} target="_blank" rel="noopener" class="about-link">
+              LinkedIn →
+            </a>
+          )}
         </div>
       </div>
 
       <div class="about-image-wrapper">
-        <img
-          src="/images/sandra-gonzalez.jpg"
-          alt="Sandra González"
-          class="about-image"
-        />
+        {site.aboutImage && (
+          <img
+            src={site.aboutImage}
+            alt="Sandra González"
+            class="about-image"
+          />
+        )}
       </div>
     </div>
   </div>
