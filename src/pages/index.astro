@@ -75,8 +75,8 @@ const heroBgImage = siteConfig.heroBgImage || '';
         <p class="hero-line hero-line--4" set:html={heroLine4.replace(/\n/g, '<br/>')}></p>
       </div>
 
-      <!-- Caricatura cara chica sepia -->
-      <div class="hero-silhouette" aria-hidden="true">
+      <!-- SVG eliminado -->
+      <div class="hero-silhouette" aria-hidden="true" style="display:none">
         <svg viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
           <!-- Pelo largo detrás -->
           <path d="M110 160 Q85 240 88 360 Q90 430 130 460 Q160 475 200 475 Q240 475 270 460 Q310 430 312 360 Q315 240 290 160 Q265 90 200 80 Q135 90 110 160Z" fill="#2E1A0A"/>
@@ -278,6 +278,7 @@ const heroBgImage = siteConfig.heroBgImage || '';
     /* Padding izquierdo alineado con sg-inner (max-width 1100px centrado) */
     padding-left: max(2rem, calc((100vw - 1100px) / 2));
     padding-right: max(2rem, calc((100vw - 1100px) / 2));
+    border-bottom: 1px solid var(--border);
   }
 
   @media (max-width: 768px) {
@@ -297,7 +298,7 @@ const heroBgImage = siteConfig.heroBgImage || '';
     inset: 0;
     background-image: var(--hero-bg-image);
     background-size: cover;
-    background-position: center;
+    background-position: right center;
     z-index: 0;
   }
 
