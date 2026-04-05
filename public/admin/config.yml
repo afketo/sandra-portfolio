@@ -8,6 +8,12 @@ public_folder: "/images"
 site_url: https://fastidious-malasada-8c0a34.netlify.app
 show_preview_links: true
 
+# Permitir GIF, WebP, AVIF además de formatos estándar
+media_library:
+  name: default
+  config:
+    multiple: false
+
 collections:
   - name: "config"
     label: "⚙️ Configuración General"
@@ -36,7 +42,7 @@ collections:
       - { label: "Categoría / Disciplina", name: "categoria", widget: "string", hint: "Ej: UI Design · UX Research" }
       - { label: "Año", name: "year", widget: "number", value_type: "int" }
       - { label: "⭐ Proyecto Destacado (Jumbo)", name: "featured", widget: "boolean", default: false, hint: "Si está activo ocupa todo el ancho de la página de inicio" }
-      - { label: "Imagen de Portada", name: "cover", widget: "image" }
+      - { label: "Imagen de Portada", name: "cover", widget: "image", hint: "JPG, PNG, WebP o GIF animado" }
       - { label: "Orden de aparición", name: "order", widget: "number", value_type: "int", default: 0, hint: "Número menor = aparece antes" }
       - { label: "Borrador (oculto)", name: "draft", widget: "boolean", default: false }
 
@@ -45,7 +51,7 @@ collections:
         widget: "list"
         collapsed: false
         required: false
-        hint: "Añade bloques de texto e imágenes en el orden que quieras. Arrastra para reordenar."
+        hint: "Añade bloques de texto e imágenes/GIFs en el orden que quieras. Arrastra para reordenar."
         types:
           - label: "📝 Bloque de texto"
             name: "texto"
@@ -54,12 +60,12 @@ collections:
             fields:
               - { label: "Texto", name: "texto", widget: "markdown", hint: "Puedes usar títulos, negritas, listas..." }
 
-          - label: "🖼 Bloque de imagen"
+          - label: "🖼 Imagen o GIF"
             name: "imagen"
             widget: "object"
             collapsed: false
             fields:
-              - { label: "Imagen", name: "imagen", widget: "image" }
+              - { label: "Archivo", name: "imagen", widget: "image", hint: "JPG, PNG, WebP o GIF animado — los GIFs se reproducen automáticamente en la web" }
               - { label: "Pie de foto (opcional)", name: "caption", widget: "string", required: false }
 
   - name: "servicios"

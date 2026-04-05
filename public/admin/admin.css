@@ -1,403 +1,380 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Serif+Display&display=swap');
 
-/* ─── Reset & base ─── */
-*, *::before, *::after { box-sizing: border-box; }
+/* ═══════════════════════════════════════════════
+   DECAP CMS — TEMA OSCURO SANDRA GONZALEZ
+   Selectores basados en elementos HTML reales
+   (Decap v3 usa styled-components con hashes,
+   no se puede usar [class*="Name"])
+═══════════════════════════════════════════════ */
 
 :root {
-  --bg-0:    #0d0d0d;
-  --bg-1:    #161616;
-  --bg-2:    #1f1f1f;
-  --bg-3:    #2a2a2a;
-  --fg-0:    #f0efe9;
-  --fg-1:    rgba(240,239,233,0.65);
-  --fg-2:    rgba(240,239,233,0.35);
-  --fg-3:    rgba(240,239,233,0.15);
-  --accent:  #c9b99a;
-  --accent2: #8b7355;
-  --danger:  #d97575;
-  --success: #7dba8f;
-  --radius:  6px;
-  --font:    'DM Sans', system-ui, sans-serif;
-  --font-serif: 'DM Serif Display', Georgia, serif;
+  --bg-0:   #0d0d0d;
+  --bg-1:   #161616;
+  --bg-2:   #1e1e1e;
+  --bg-3:   #272727;
+  --bg-4:   #313131;
+  --fg-0:   #f0efe9;
+  --fg-1:   rgba(240,239,233,.7);
+  --fg-2:   rgba(240,239,233,.4);
+  --fg-3:   rgba(240,239,233,.12);
+  --fg-4:   rgba(240,239,233,.06);
+  --accent: #c9b99a;
+  --danger: #d97575;
+  --ok:     #7dba8f;
+  --r:      6px;
+  --font:   'DM Sans', system-ui, -apple-system, sans-serif;
 }
 
-/* ─── Body & app shell ─── */
-body,
-#nc-root,
-[class*="AppContainer"],
-[class*="Page"] {
+/* ── Base ─────────────────────────────────────── */
+html, body {
   background: var(--bg-0) !important;
   color: var(--fg-0) !important;
   font-family: var(--font) !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  -webkit-font-smoothing: antialiased !important;
 }
 
-/* ─── Top Header bar ─── */
-[class*="AppHeader"],
-header[class] {
+/* Todos los textos */
+body *, body *::before, body *::after {
+  font-family: var(--font) !important;
+  box-sizing: border-box !important;
+}
+
+/* Scrollbar */
+* { scrollbar-width: thin; scrollbar-color: var(--fg-3) transparent; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--fg-3); border-radius: 3px; }
+
+/* ── Fondos de contenedores ───────────────────── */
+body > div,
+body > div > div,
+body > div > div > div {
+  background: var(--bg-0) !important;
+}
+
+/* ── Header superior ──────────────────────────── */
+body header,
+body > div > header {
   background: var(--bg-1) !important;
   border-bottom: 1px solid var(--fg-3) !important;
   box-shadow: none !important;
-  padding: 0 2rem !important;
 }
 
-[class*="AppHeaderTitle"],
-[class*="AppHeaderAction"] {
-  color: var(--fg-0) !important;
-  font-family: var(--font) !important;
-}
-
-/* Logo / site name en el header */
-[class*="AppHeaderTitle"] span,
-[class*="SiteName"] {
-  font-family: var(--font-serif) !important;
-  font-size: 1rem !important;
-  letter-spacing: 0.04em !important;
+body header *,
+body > div > header * {
   color: var(--fg-0) !important;
 }
 
-/* ─── Sidebar / Nav de colecciones ─── */
-[class*="Sidebar"],
-[class*="Nav"],
-nav[class] {
+/* ── Sidebar / Nav lateral ────────────────────── */
+body nav,
+body aside,
+body [role="navigation"] {
   background: var(--bg-1) !important;
   border-right: 1px solid var(--fg-3) !important;
 }
 
-[class*="NavLink"],
-[class*="SidebarNavLink"],
-[class*="NavItem"] a {
-  font-family: var(--font) !important;
-  font-size: 0.8rem !important;
-  font-weight: 400 !important;
-  letter-spacing: 0.06em !important;
+body nav a,
+body nav button,
+body aside a,
+body aside button {
   color: var(--fg-1) !important;
-  text-decoration: none !important;
-  border-radius: var(--radius) !important;
-  transition: color 0.15s, background 0.15s !important;
-  padding: 0.5rem 0.75rem !important;
+  border-radius: var(--r) !important;
+  transition: color .15s, background .15s !important;
 }
 
-[class*="NavLink"]:hover,
-[class*="NavLink"][class*="active"],
-[class*="NavLink"][aria-current] {
+body nav a:hover,
+body nav button:hover,
+body aside a:hover,
+body aside button:hover,
+body nav a[aria-current],
+body nav [class*="active"] {
   color: var(--fg-0) !important;
   background: var(--bg-3) !important;
 }
 
-/* ─── Collection list ─── */
-[class*="CollectionContainer"],
-[class*="EntriesCollection"] {
+/* ── Área principal de contenido ──────────────── */
+body main,
+body > div > div > main,
+body > div > div > div > main {
   background: var(--bg-0) !important;
+  color: var(--fg-0) !important;
 }
 
-[class*="EntryCard"],
-[class*="ListCard"] {
-  background: var(--bg-1) !important;
-  border: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: none !important;
-  transition: border-color 0.2s, background 0.2s !important;
+/* ── Todos los div con fondo blanco/gris claro ── */
+body div[style*="background-color: rgb(255"],
+body div[style*="background: rgb(255"],
+body div[style*="background-color: white"],
+body div[style*="background: white"],
+body div[style*="background-color: #fff"],
+body div[style*="background-color: #f"],
+body div[style*="background-color: rgb(248"],
+body div[style*="background-color: rgb(250"] {
+  background-color: var(--bg-1) !important;
 }
 
-[class*="EntryCard"]:hover,
-[class*="ListCard"]:hover {
+/* Forzar fondo oscuro en paneles flotantes y contenedores */
+body [role="dialog"],
+body [role="menu"],
+body [role="listbox"],
+body [role="tooltip"] {
   background: var(--bg-2) !important;
-  border-color: var(--fg-2) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--r) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5) !important;
+  color: var(--fg-0) !important;
 }
 
-[class*="EntryCard"] *,
-[class*="ListCard"] * {
+body [role="option"],
+body [role="menuitem"] {
   color: var(--fg-1) !important;
-  font-family: var(--font) !important;
+  transition: background .1s !important;
+}
+body [role="option"]:hover,
+body [role="menuitem"]:hover,
+body [role="option"][aria-selected="true"] {
+  background: var(--bg-3) !important;
+  color: var(--fg-0) !important;
 }
 
-/* ─── Editor panel ─── */
-[class*="EditorContainer"],
-[class*="Editor"],
-[class*="ControlPane"] {
-  background: var(--bg-0) !important;
-}
-
-/* Toolbar del editor */
-[class*="EditorToolbar"],
-[class*="ToolbarContainer"] {
-  background: var(--bg-1) !important;
-  border-bottom: 1px solid var(--fg-3) !important;
-  box-shadow: none !important;
-}
-
-/* ─── Campos de formulario ─── */
-[class*="FieldWrapper"],
-[class*="WidgetWrapper"],
-[class*="Field"] {
-  background: transparent !important;
-}
-
-[class*="FieldLabel"],
-label[class] {
-  font-family: var(--font) !important;
-  font-size: 0.7rem !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  color: var(--fg-2) !important;
-  margin-bottom: 0.4rem !important;
-}
-
-/* Inputs de texto */
-input[type="text"],
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="password"],
-textarea,
-[class*="TextInput"],
-[class*="NumberInput"],
-[class*="Input"] input {
+/* ── Inputs ───────────────────────────────────── */
+body input,
+body input[type="text"],
+body input[type="number"],
+body input[type="email"],
+body input[type="url"],
+body input[type="password"],
+body input[type="search"],
+body textarea,
+body select {
   background: var(--bg-2) !important;
   border: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
   color: var(--fg-0) !important;
   font-family: var(--font) !important;
-  font-size: 0.9rem !important;
-  padding: 0.6rem 0.85rem !important;
+  font-size: 0.875rem !important;
+  padding: 0.55rem 0.8rem !important;
   outline: none !important;
-  transition: border-color 0.2s !important;
   box-shadow: none !important;
+  transition: border-color .2s, background .2s !important;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-textarea:focus,
-[class*="TextInput"]:focus {
+body input:focus,
+body textarea:focus,
+body select:focus {
   border-color: var(--accent) !important;
   background: var(--bg-3) !important;
 }
 
-input::placeholder,
-textarea::placeholder {
+body input::placeholder,
+body textarea::placeholder {
   color: var(--fg-2) !important;
 }
 
-/* Select */
-select,
-[class*="SelectInput"] {
-  background: var(--bg-2) !important;
-  border: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) !important;
-  color: var(--fg-0) !important;
-  font-family: var(--font) !important;
-  font-size: 0.9rem !important;
+/* Labels */
+body label {
+  color: var(--fg-2) !important;
+  font-size: 0.68rem !important;
+  font-weight: 500 !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
 }
 
-/* ─── Editor Markdown (CodeMirror) ─── */
-.cms-editor-visual,
-[class*="EditorWrapper"],
-[class*="RawEditor"],
-.CodeMirror,
-[class*="MarkdownEditor"] {
-  background: var(--bg-2) !important;
-  border: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) !important;
-  color: var(--fg-0) !important;
-  font-family: var(--font) !important;
-}
-
-.CodeMirror-scroll { background: var(--bg-2) !important; }
-.CodeMirror-selected { background: var(--bg-3) !important; }
-.CodeMirror-cursor { border-left-color: var(--accent) !important; }
-
-/* Toolbar del markdown */
-[class*="MarkdownToolbar"],
-[class*="EditorToolbarButton"] {
-  background: var(--bg-3) !important;
-  border-bottom: 1px solid var(--fg-3) !important;
-}
-
-[class*="ToolbarButton"],
-[class*="EditorToolbarButton"] button {
-  color: var(--fg-1) !important;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 4px !important;
-  transition: color 0.15s, background 0.15s !important;
-}
-
-[class*="ToolbarButton"]:hover,
-[class*="EditorToolbarButton"] button:hover {
-  color: var(--fg-0) !important;
-  background: var(--fg-3) !important;
-}
-
-/* ─── Botones ─── */
-button[class],
-[class*="Button"] {
+/* ── Botones ──────────────────────────────────── */
+body button {
   font-family: var(--font) !important;
   font-size: 0.78rem !important;
   font-weight: 500 !important;
-  letter-spacing: 0.08em !important;
-  border-radius: var(--radius) !important;
-  transition: all 0.15s ease !important;
+  letter-spacing: .06em !important;
+  border-radius: var(--r) !important;
   cursor: pointer !important;
   border: none !important;
+  transition: all .15s !important;
 }
 
-/* Botón primario (publicar, guardar) */
-[class*="PrimaryButton"],
-button[class*="primary"],
-[class*="PublishButton"] {
+/* Botón primario — detectado por color de fondo original */
+body button[style*="background"],
+body button[type="submit"],
+body button[class*="primary" i],
+body button[class*="publish" i],
+body button[class*="save" i] {
   background: var(--fg-0) !important;
   color: var(--bg-0) !important;
-  padding: 0.55rem 1.25rem !important;
+  padding: 0.5rem 1.1rem !important;
 }
-
-[class*="PrimaryButton"]:hover,
-button[class*="primary"]:hover {
+body button[style*="background"]:hover,
+body button[type="submit"]:hover {
   background: var(--accent) !important;
   color: var(--bg-0) !important;
 }
 
-/* Botón secundario */
-[class*="SecondaryButton"],
-button[class*="secondary"] {
+/* Botones secundarios / neutros */
+body button:not([style*="background"]):not([type="submit"]) {
   background: var(--bg-3) !important;
-  color: var(--fg-0) !important;
+  color: var(--fg-1) !important;
   border: 1px solid var(--fg-3) !important;
 }
+body button:not([style*="background"]):not([type="submit"]):hover {
+  background: var(--bg-4) !important;
+  color: var(--fg-0) !important;
+  border-color: var(--fg-2) !important;
+}
 
-[class*="SecondaryButton"]:hover,
-button[class*="secondary"]:hover {
+/* SVG icons en botones */
+body button svg,
+body button svg path,
+body button svg polyline {
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+/* ── Tarjetas de la lista de entradas ─────────── */
+body [role="list"] > *,
+body ul[class] > li {
+  background: var(--bg-1) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--r) !important;
+  color: var(--fg-1) !important;
+  transition: border-color .2s, background .2s !important;
+  margin-bottom: 0.5rem !important;
+}
+body [role="list"] > *:hover,
+body ul[class] > li:hover {
   background: var(--bg-2) !important;
   border-color: var(--fg-2) !important;
 }
 
-/* Botón de peligro (eliminar) */
-[class*="DangerButton"],
-button[class*="danger"],
-[class*="DeleteButton"] {
-  background: transparent !important;
-  color: var(--danger) !important;
-  border: 1px solid rgba(217,117,117,0.3) !important;
+/* ── Editor de Markdown ───────────────────────── */
+/* CodeMirror (editor de código/markdown) */
+body .CodeMirror,
+body .CodeMirror-scroll {
+  background: var(--bg-2) !important;
+  color: var(--fg-0) !important;
+  font-family: 'DM Sans', monospace !important;
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+}
+body .CodeMirror-cursor { border-left-color: var(--accent) !important; }
+body .CodeMirror-selected,
+body .CodeMirror-line::selection,
+body .CodeMirror-line > span::selection { background: var(--bg-4) !important; }
+body .CodeMirror-gutters { background: var(--bg-3) !important; border-right: 1px solid var(--fg-3) !important; }
+
+/* Toolbar del editor markdown */
+body [class*="toolbar" i],
+body [class*="Toolbar" i]:not(body button) {
+  background: var(--bg-3) !important;
+  border-bottom: 1px solid var(--fg-3) !important;
+  border-radius: var(--r) var(--r) 0 0 !important;
 }
 
-[class*="DangerButton"]:hover {
-  background: rgba(217,117,117,0.1) !important;
-}
-
-/* ─── Bloques / List items ─── */
-[class*="ListItemWrapper"],
-[class*="SortableListItem"],
-[class*="ObjectWidgetTopBar"] {
+/* ── Bloques / List items del editor ─────────── */
+/* El contenedor de cada bloque (texto o imagen) */
+body [data-testid*="object"],
+body [data-testid*="list-item"],
+body [data-testid*="field"] {
   background: var(--bg-2) !important;
   border: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
   margin-bottom: 0.75rem !important;
 }
 
-[class*="ObjectWidgetTopBar"] {
-  background: var(--bg-3) !important;
-  border-bottom: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) var(--radius) 0 0 !important;
-  padding: 0.6rem 1rem !important;
-}
-
-/* Drag handle */
-[class*="DragHandle"],
-[class*="DragIcon"] {
-  color: var(--fg-2) !important;
-}
-
-/* ─── Dropdown / Menús ─── */
-[class*="Dropdown"],
-[class*="Menu"],
-[class*="DropdownList"] {
-  background: var(--bg-2) !important;
-  border: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
-}
-
-[class*="DropdownItem"],
-[class*="MenuItem"] {
-  color: var(--fg-1) !important;
-  font-family: var(--font) !important;
-  font-size: 0.85rem !important;
-  transition: background 0.1s !important;
-}
-
-[class*="DropdownItem"]:hover,
-[class*="MenuItem"]:hover {
-  background: var(--bg-3) !important;
-  color: var(--fg-0) !important;
-}
-
-/* ─── Toggle / Boolean ─── */
-[class*="ToggleBackground"] {
-  background: var(--bg-3) !important;
-  border: 1px solid var(--fg-3) !important;
-}
-
-[class*="ToggleBackground"][class*="active"],
-[class*="Toggle"][aria-checked="true"] [class*="ToggleBackground"] {
-  background: var(--accent) !important;
-  border-color: var(--accent) !important;
-}
-
-/* ─── Image upload ─── */
-[class*="ImageUpload"],
-[class*="FileLink"],
-[class*="UploadButton"] {
+/* ── Upload de imágenes ───────────────────────── */
+body [data-testid*="image"],
+body [class*="image" i][class*="upload" i] {
   background: var(--bg-2) !important;
   border: 1px dashed var(--fg-3) !important;
-  border-radius: var(--radius) !important;
-  color: var(--fg-1) !important;
-  transition: border-color 0.2s !important;
+  border-radius: var(--r) !important;
+  transition: border-color .2s !important;
 }
-
-[class*="ImageUpload"]:hover {
+body [data-testid*="image"]:hover {
   border-color: var(--accent) !important;
 }
 
-/* ─── Hint text ─── */
-[class*="HintText"],
-[class*="FieldHint"] {
+/* ── Toggle / Switch ──────────────────────────── */
+body input[type="checkbox"],
+body [role="switch"],
+body [role="checkbox"] {
+  accent-color: var(--accent) !important;
+}
+
+/* ── Textos secundarios / hints ───────────────── */
+body p[class],
+body span[class]:not(button span),
+body small {
+  color: var(--fg-1) !important;
+}
+
+/* Hint texts (descripción de los campos) */
+body p:last-child:not(:first-child),
+body [class*="hint" i],
+body [class*="Hint" i] {
   color: var(--fg-2) !important;
   font-size: 0.72rem !important;
-  letter-spacing: 0.02em !important;
 }
 
-/* ─── Notificaciones ─── */
-[class*="Toast"],
-[class*="Notification"] {
+/* ── Headings dentro del CMS ─────────────────── */
+body h1, body h2, body h3, body h4 {
+  color: var(--fg-0) !important;
+  font-weight: 400 !important;
+}
+
+/* ── Notificaciones / Toasts ─────────────────── */
+body [role="alert"],
+body [role="status"],
+body [aria-live] {
   background: var(--bg-2) !important;
   border: 1px solid var(--fg-3) !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
   color: var(--fg-0) !important;
-  font-family: var(--font) !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4) !important;
 }
 
-/* ─── Modal / Overlay ─── */
-[class*="ModalContainer"],
-[class*="Dialog"] {
-  background: var(--bg-1) !important;
+/* ── Separadores ─────────────────────────────── */
+body hr { border-color: var(--fg-3) !important; }
+
+/* ── Links ───────────────────────────────────── */
+body a:not(nav a):not(aside a) {
+  color: var(--accent) !important;
+  text-decoration: none !important;
+}
+body a:hover { text-decoration: underline !important; }
+
+/* ── Tabla (si aparece) ──────────────────────── */
+body table { border-collapse: collapse !important; width: 100% !important; }
+body th, body td {
   border: 1px solid var(--fg-3) !important;
-  border-radius: calc(var(--radius) * 2) !important;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.6) !important;
+  padding: 0.5rem 0.75rem !important;
+  color: var(--fg-1) !important;
+}
+body th { background: var(--bg-3) !important; color: var(--fg-0) !important; }
+body tr:nth-child(even) td { background: var(--bg-2) !important; }
+
+/* ── Sección de preview (iframe) ─────────────── */
+body iframe { border: none !important; }
+
+/* ── Supresión de fondos blancos residuales ──── */
+body div, body section, body article, body aside, body nav, body header, body footer, body main {
+  color: inherit !important;
 }
 
-[class*="Overlay"],
-[class*="Backdrop"] {
-  background: rgba(0,0,0,0.7) !important;
-  backdrop-filter: blur(4px) !important;
+/* Cualquier fondo blanco explícito que quede */
+body *[style*="background-color: rgb(255, 255, 255)"],
+body *[style*="background: rgb(255, 255, 255)"],
+body *[style*="background-color: white"],
+body *[style*="background: white"],
+body *[style*="background: #fff"],
+body *[style*="background-color: #fff"],
+body *[style*="background: #ffffff"],
+body *[style*="background-color: #ffffff"] {
+  background: var(--bg-1) !important;
 }
 
-/* ─── Scrollbars ─── */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--fg-3) transparent;
+/* ── Colores de texto blanco residuales ─────── */
+body *[style*="color: rgb(0, 0, 0)"],
+body *[style*="color: black"],
+body *[style*="color: #000"],
+body *[style*="color: #000000"] {
+  color: var(--fg-0) !important;
 }
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--fg-3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--fg-2); }
