@@ -45,23 +45,28 @@ const currentPath = Astro.url.pathname;
   }
 
   .sg-header-inner {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    position: relative;
+    display: flex;
     align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
     padding: 0 2rem;
     height: 72px;
   }
 
   .sg-nav {
-    justify-self: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   @media (max-width: 768px) {
     .sg-header-inner {
       padding: 0 1.25rem;
       height: 60px;
+    }
+    .sg-nav {
+      position: static;
+      transform: none;
+      margin-left: auto;
     }
   }
 
