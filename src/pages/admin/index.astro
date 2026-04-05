@@ -1,7 +1,5 @@
 ---
 // Panel de administración — Decap CMS
-// En local usa el proxy en puerto 8081 (npm run cms)
-// En producción usa Netlify Identity (git-gateway)
 ---
 
 <!doctype html>
@@ -10,23 +8,129 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin — Sandra Gonzalez</title>
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+    <!-- Estilos base -->
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { background: #111; font-family: system-ui, sans-serif; }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { background: #0d0d0d; font-family: 'DM Sans', system-ui, sans-serif; }
     </style>
+    <!-- Custom theme — se carga tras Decap para sobreescribir -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
+    <!-- Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
     <script>
+      // ── Netlify Identity ──────────────────────────────────
       if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', user => {
+        window.netlifyIdentity.on('init', function(user) {
           if (!user) {
-            window.netlifyIdentity.on('login', () => {
+            window.netlifyIdentity.on('login', function() {
               document.location.href = '/admin/';
             });
           }
         });
+      }
+
+      // ── Custom theme CSS (inyectado después de que Decap cargue) ──
+      function injectTheme() {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/admin/admin.css';
+        document.head.appendChild(link);
+      }
+
+      // ── Preview template para Trabajos ───────────────────
+      if (window.CMS) {
+        injectTheme();
+        registerPreviews();
+      } else {
+        window.addEventListener('load', function() {
+          injectTheme();
+          if (window.CMS) registerPreviews();
+        });
+      }
+
+      function registerPreviews() {
+        // Preview pane: muestra un resumen visual del proyecto
+        var h = window.h; // Preact/React createElement de Decap
+
+        CMS.registerPreviewTemplate('trabajos', function(props) {
+          var entry = props.entry;
+          var title    = entry.getIn(['data', 'title'])    || 'Sin título';
+          var categoria = entry.getIn(['data', 'categoria']) || '';
+          var year     = entry.getIn(['data', 'year'])     || '';
+          var cover    = entry.getIn(['data', 'cover'])    || '';
+          var featured = entry.getIn(['data', 'featured']) || false;
+
+          return h('div', { style: {
+            background: '#111111',
+            color: '#F5F5F0',
+            fontFamily: "'DM Sans', sans-serif",
+            minHeight: '100vh',
+            padding: '2rem'
+          }},
+            // Badge destacado
+            featured && h('div', { style: {
+              display: 'inline-block',
+              fontSize: '0.65rem',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              background: 'rgba(201,185,154,0.15)',
+              color: '#c9b99a',
+              border: '1px solid rgba(201,185,154,0.3)',
+              padding: '0.3rem 0.75rem',
+              borderRadius: '4px',
+              marginBottom: '1.5rem'
+            }}, '⭐ Destacado — Jumbo'),
+
+            // Título
+            h('h1', { style: {
+              fontFamily: "'DM Serif Display', Georgia, serif",
+              fontSize: 'clamp(2rem,6vw,4rem)',
+              fontWeight: '400',
+              lineHeight: '1.1',
+              marginBottom: '0.75rem',
+              color: '#F5F5F0'
+            }}, title),
+
+            // Meta
+            h('div', { style: {
+              display: 'flex', gap: '1.5rem', marginBottom: '2rem'
+            }},
+              h('span', { style: { fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(245,245,240,0.4)' } }, categoria),
+              h('span', { style: { fontSize: '0.7rem', color: 'rgba(245,245,240,0.25)' } }, year)
+            ),
+
+            // Cover
+            cover && h('div', { style: {
+              aspectRatio: '16/9', overflow: 'hidden',
+              background: 'rgba(245,245,240,0.04)', marginBottom: '2rem'
+            }},
+              h('img', { src: cover, alt: title, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } })
+            ),
+
+            // Enlace al sitio
+            h('a', {
+              href: 'https://fastidious-malasada-8c0a34.netlify.app/trabajo/' + entry.getIn(['data', 'slug'], ''),
+              target: '_blank',
+              style: {
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase',
+                color: '#c9b99a', textDecoration: 'none',
+                border: '1px solid rgba(201,185,154,0.3)',
+                padding: '0.5rem 1rem', borderRadius: '4px'
+              }
+            }, 'Ver en el sitio →')
+          );
+        });
+
+        // Estilo del iframe de preview
+        CMS.registerPreviewStyle('/admin/admin.css');
       }
     </script>
   </body>

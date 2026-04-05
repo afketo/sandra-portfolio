@@ -1,0 +1,403 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap');
+
+/* ─── Reset & base ─── */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --bg-0:    #0d0d0d;
+  --bg-1:    #161616;
+  --bg-2:    #1f1f1f;
+  --bg-3:    #2a2a2a;
+  --fg-0:    #f0efe9;
+  --fg-1:    rgba(240,239,233,0.65);
+  --fg-2:    rgba(240,239,233,0.35);
+  --fg-3:    rgba(240,239,233,0.15);
+  --accent:  #c9b99a;
+  --accent2: #8b7355;
+  --danger:  #d97575;
+  --success: #7dba8f;
+  --radius:  6px;
+  --font:    'DM Sans', system-ui, sans-serif;
+  --font-serif: 'DM Serif Display', Georgia, serif;
+}
+
+/* ─── Body & app shell ─── */
+body,
+#nc-root,
+[class*="AppContainer"],
+[class*="Page"] {
+  background: var(--bg-0) !important;
+  color: var(--fg-0) !important;
+  font-family: var(--font) !important;
+}
+
+/* ─── Top Header bar ─── */
+[class*="AppHeader"],
+header[class] {
+  background: var(--bg-1) !important;
+  border-bottom: 1px solid var(--fg-3) !important;
+  box-shadow: none !important;
+  padding: 0 2rem !important;
+}
+
+[class*="AppHeaderTitle"],
+[class*="AppHeaderAction"] {
+  color: var(--fg-0) !important;
+  font-family: var(--font) !important;
+}
+
+/* Logo / site name en el header */
+[class*="AppHeaderTitle"] span,
+[class*="SiteName"] {
+  font-family: var(--font-serif) !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.04em !important;
+  color: var(--fg-0) !important;
+}
+
+/* ─── Sidebar / Nav de colecciones ─── */
+[class*="Sidebar"],
+[class*="Nav"],
+nav[class] {
+  background: var(--bg-1) !important;
+  border-right: 1px solid var(--fg-3) !important;
+}
+
+[class*="NavLink"],
+[class*="SidebarNavLink"],
+[class*="NavItem"] a {
+  font-family: var(--font) !important;
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.06em !important;
+  color: var(--fg-1) !important;
+  text-decoration: none !important;
+  border-radius: var(--radius) !important;
+  transition: color 0.15s, background 0.15s !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+[class*="NavLink"]:hover,
+[class*="NavLink"][class*="active"],
+[class*="NavLink"][aria-current] {
+  color: var(--fg-0) !important;
+  background: var(--bg-3) !important;
+}
+
+/* ─── Collection list ─── */
+[class*="CollectionContainer"],
+[class*="EntriesCollection"] {
+  background: var(--bg-0) !important;
+}
+
+[class*="EntryCard"],
+[class*="ListCard"] {
+  background: var(--bg-1) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s, background 0.2s !important;
+}
+
+[class*="EntryCard"]:hover,
+[class*="ListCard"]:hover {
+  background: var(--bg-2) !important;
+  border-color: var(--fg-2) !important;
+}
+
+[class*="EntryCard"] *,
+[class*="ListCard"] * {
+  color: var(--fg-1) !important;
+  font-family: var(--font) !important;
+}
+
+/* ─── Editor panel ─── */
+[class*="EditorContainer"],
+[class*="Editor"],
+[class*="ControlPane"] {
+  background: var(--bg-0) !important;
+}
+
+/* Toolbar del editor */
+[class*="EditorToolbar"],
+[class*="ToolbarContainer"] {
+  background: var(--bg-1) !important;
+  border-bottom: 1px solid var(--fg-3) !important;
+  box-shadow: none !important;
+}
+
+/* ─── Campos de formulario ─── */
+[class*="FieldWrapper"],
+[class*="WidgetWrapper"],
+[class*="Field"] {
+  background: transparent !important;
+}
+
+[class*="FieldLabel"],
+label[class] {
+  font-family: var(--font) !important;
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--fg-2) !important;
+  margin-bottom: 0.4rem !important;
+}
+
+/* Inputs de texto */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+textarea,
+[class*="TextInput"],
+[class*="NumberInput"],
+[class*="Input"] input {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  color: var(--fg-0) !important;
+  font-family: var(--font) !important;
+  font-size: 0.9rem !important;
+  padding: 0.6rem 0.85rem !important;
+  outline: none !important;
+  transition: border-color 0.2s !important;
+  box-shadow: none !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+[class*="TextInput"]:focus {
+  border-color: var(--accent) !important;
+  background: var(--bg-3) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--fg-2) !important;
+}
+
+/* Select */
+select,
+[class*="SelectInput"] {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  color: var(--fg-0) !important;
+  font-family: var(--font) !important;
+  font-size: 0.9rem !important;
+}
+
+/* ─── Editor Markdown (CodeMirror) ─── */
+.cms-editor-visual,
+[class*="EditorWrapper"],
+[class*="RawEditor"],
+.CodeMirror,
+[class*="MarkdownEditor"] {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  color: var(--fg-0) !important;
+  font-family: var(--font) !important;
+}
+
+.CodeMirror-scroll { background: var(--bg-2) !important; }
+.CodeMirror-selected { background: var(--bg-3) !important; }
+.CodeMirror-cursor { border-left-color: var(--accent) !important; }
+
+/* Toolbar del markdown */
+[class*="MarkdownToolbar"],
+[class*="EditorToolbarButton"] {
+  background: var(--bg-3) !important;
+  border-bottom: 1px solid var(--fg-3) !important;
+}
+
+[class*="ToolbarButton"],
+[class*="EditorToolbarButton"] button {
+  color: var(--fg-1) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 4px !important;
+  transition: color 0.15s, background 0.15s !important;
+}
+
+[class*="ToolbarButton"]:hover,
+[class*="EditorToolbarButton"] button:hover {
+  color: var(--fg-0) !important;
+  background: var(--fg-3) !important;
+}
+
+/* ─── Botones ─── */
+button[class],
+[class*="Button"] {
+  font-family: var(--font) !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  border-radius: var(--radius) !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+
+/* Botón primario (publicar, guardar) */
+[class*="PrimaryButton"],
+button[class*="primary"],
+[class*="PublishButton"] {
+  background: var(--fg-0) !important;
+  color: var(--bg-0) !important;
+  padding: 0.55rem 1.25rem !important;
+}
+
+[class*="PrimaryButton"]:hover,
+button[class*="primary"]:hover {
+  background: var(--accent) !important;
+  color: var(--bg-0) !important;
+}
+
+/* Botón secundario */
+[class*="SecondaryButton"],
+button[class*="secondary"] {
+  background: var(--bg-3) !important;
+  color: var(--fg-0) !important;
+  border: 1px solid var(--fg-3) !important;
+}
+
+[class*="SecondaryButton"]:hover,
+button[class*="secondary"]:hover {
+  background: var(--bg-2) !important;
+  border-color: var(--fg-2) !important;
+}
+
+/* Botón de peligro (eliminar) */
+[class*="DangerButton"],
+button[class*="danger"],
+[class*="DeleteButton"] {
+  background: transparent !important;
+  color: var(--danger) !important;
+  border: 1px solid rgba(217,117,117,0.3) !important;
+}
+
+[class*="DangerButton"]:hover {
+  background: rgba(217,117,117,0.1) !important;
+}
+
+/* ─── Bloques / List items ─── */
+[class*="ListItemWrapper"],
+[class*="SortableListItem"],
+[class*="ObjectWidgetTopBar"] {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  margin-bottom: 0.75rem !important;
+}
+
+[class*="ObjectWidgetTopBar"] {
+  background: var(--bg-3) !important;
+  border-bottom: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) var(--radius) 0 0 !important;
+  padding: 0.6rem 1rem !important;
+}
+
+/* Drag handle */
+[class*="DragHandle"],
+[class*="DragIcon"] {
+  color: var(--fg-2) !important;
+}
+
+/* ─── Dropdown / Menús ─── */
+[class*="Dropdown"],
+[class*="Menu"],
+[class*="DropdownList"] {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+}
+
+[class*="DropdownItem"],
+[class*="MenuItem"] {
+  color: var(--fg-1) !important;
+  font-family: var(--font) !important;
+  font-size: 0.85rem !important;
+  transition: background 0.1s !important;
+}
+
+[class*="DropdownItem"]:hover,
+[class*="MenuItem"]:hover {
+  background: var(--bg-3) !important;
+  color: var(--fg-0) !important;
+}
+
+/* ─── Toggle / Boolean ─── */
+[class*="ToggleBackground"] {
+  background: var(--bg-3) !important;
+  border: 1px solid var(--fg-3) !important;
+}
+
+[class*="ToggleBackground"][class*="active"],
+[class*="Toggle"][aria-checked="true"] [class*="ToggleBackground"] {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+/* ─── Image upload ─── */
+[class*="ImageUpload"],
+[class*="FileLink"],
+[class*="UploadButton"] {
+  background: var(--bg-2) !important;
+  border: 1px dashed var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  color: var(--fg-1) !important;
+  transition: border-color 0.2s !important;
+}
+
+[class*="ImageUpload"]:hover {
+  border-color: var(--accent) !important;
+}
+
+/* ─── Hint text ─── */
+[class*="HintText"],
+[class*="FieldHint"] {
+  color: var(--fg-2) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* ─── Notificaciones ─── */
+[class*="Toast"],
+[class*="Notification"] {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: var(--radius) !important;
+  color: var(--fg-0) !important;
+  font-family: var(--font) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+}
+
+/* ─── Modal / Overlay ─── */
+[class*="ModalContainer"],
+[class*="Dialog"] {
+  background: var(--bg-1) !important;
+  border: 1px solid var(--fg-3) !important;
+  border-radius: calc(var(--radius) * 2) !important;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6) !important;
+}
+
+[class*="Overlay"],
+[class*="Backdrop"] {
+  background: rgba(0,0,0,0.7) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* ─── Scrollbars ─── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--fg-3) transparent;
+}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--fg-3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-2); }

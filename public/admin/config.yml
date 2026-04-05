@@ -5,6 +5,9 @@ backend:
 media_folder: "public/images"
 public_folder: "/images"
 
+site_url: https://fastidious-malasada-8c0a34.netlify.app
+show_preview_links: true
+
 collections:
   - name: "config"
     label: "⚙️ Configuración General"
@@ -27,6 +30,7 @@ collections:
     create: true
     slug: "{{slug}}"
     summary: "{{title}} — {{year}}"
+    preview_path: "trabajo/{{slug}}"
     fields:
       - { label: "Título del Proyecto", name: "title", widget: "string" }
       - { label: "Categoría / Disciplina", name: "categoria", widget: "string", hint: "Ej: UI Design · UX Research" }
@@ -39,18 +43,21 @@ collections:
       - label: "Contenido del artículo"
         name: "bloques"
         widget: "list"
+        collapsed: false
         required: false
-        hint: "Añade bloques de texto e imágenes en el orden que quieras"
+        hint: "Añade bloques de texto e imágenes en el orden que quieras. Arrastra para reordenar."
         types:
           - label: "📝 Bloque de texto"
             name: "texto"
             widget: "object"
+            collapsed: false
             fields:
-              - { label: "Texto", name: "texto", widget: "markdown", hint: "Puedes usar títulos, negritas, listas, etc." }
+              - { label: "Texto", name: "texto", widget: "markdown", hint: "Puedes usar títulos, negritas, listas..." }
 
           - label: "🖼 Bloque de imagen"
             name: "imagen"
             widget: "object"
+            collapsed: false
             fields:
               - { label: "Imagen", name: "imagen", widget: "image" }
               - { label: "Pie de foto (opcional)", name: "caption", widget: "string", required: false }
