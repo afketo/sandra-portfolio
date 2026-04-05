@@ -12,6 +12,9 @@ const trabajos = defineCollection({
     featured: z.boolean().default(false),
     order: z.number().default(0),
     draft: z.boolean().default(false),
+    navColor: z.string().optional(),
+    cliente: z.string().optional(),
+    rol: z.string().optional(),
     bloques: z.array(
       z.object({
         type: z.enum(['texto', 'imagen']),

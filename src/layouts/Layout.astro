@@ -6,11 +6,15 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  navColor?: string;
+  fullbleed?: boolean;
 }
 
 const {
   title = 'Sandra González — Diseñadora UI/UX',
   description = 'Portfolio de Sandra González, diseñadora UI/UX especializada en experiencias digitales.',
+  navColor,
+  fullbleed = false,
 } = Astro.props;
 ---
 
@@ -23,6 +27,9 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {navColor && (
+      <style set:html={`:root { --nav-color: ${navColor}; }`} />
+    )}
     <style>
       .sg-main {
         padding-top: calc(72px + 3.5rem);
@@ -30,6 +37,18 @@ const {
         padding-right: 2rem;
         padding-bottom: 6rem;
         min-height: 100dvh;
+      }
+
+      .sg-main--fullbleed {
+        padding-top: 72px;
+        padding-left: 0;
+        padding-right: 0;
+        overflow-x: hidden;
+      }
+
+      .sg-main--fullbleed .sg-inner {
+        padding-left: 2rem;
+        padding-right: 2rem;
       }
 
       .sg-inner {
@@ -44,12 +63,19 @@ const {
           padding-right: 1.25rem;
           padding-bottom: 3rem;
         }
+        .sg-main--fullbleed {
+          padding-top: 60px;
+        }
+        .sg-main--fullbleed .sg-inner {
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+        }
       }
     </style>
   </head>
   <body>
     <Nav />
-    <main class="sg-main">
+    <main class={fullbleed ? 'sg-main sg-main--fullbleed' : 'sg-main'}>
       <div class="sg-inner">
         <slot />
       </div>

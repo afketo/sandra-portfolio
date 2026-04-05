@@ -23,6 +23,16 @@ collections:
           - { label: "Instagram URL", name: "instagram", widget: "string", required: false }
           - { label: "LinkedIn URL", name: "linkedin", widget: "string", required: false }
           - { label: "Behance URL", name: "behance", widget: "string", required: false }
+          - label: "🏠 Hero (Portada)"
+            name: "heroLabel"
+            widget: "object"
+            collapsed: false
+            fields:
+              - { label: "Línea 1 (pequeña)", name: "heroLine1", widget: "string", hint: "Ej: Hola! soy" }
+              - { label: "Línea 2 — Nombre (grande)", name: "heroLine2", widget: "string", hint: "Ej: Sandra González" }
+              - { label: "Línea 3 — Rol", name: "heroLine3", widget: "string", hint: "Ej: product designer" }
+              - { label: "Línea 4 — Descripción", name: "heroLine4", widget: "text", hint: "Párrafo largo bajo el nombre" }
+              - { label: "Imagen de fondo", name: "heroBgImage", widget: "image", required: false, hint: "Imagen que aparece detrás del texto del hero. Déjalo vacío para fondo liso." }
 
   - name: "trabajos"
     label: "💼 Trabajos"
@@ -39,6 +49,9 @@ collections:
       - { label: "Imagen de Portada", name: "cover", widget: "image", hint: "JPG, PNG, WebP o GIF animado" }
       - { label: "Orden de aparición", name: "order", widget: "number", value_type: "int", default: 0, hint: "Número menor = aparece antes" }
       - { label: "Borrador (oculto)", name: "draft", widget: "boolean", default: false }
+      - { label: "🎨 Color del topbar", name: "navColor", widget: "color", required: false, hint: "Color de fondo de la barra de navegación al ver este proyecto. Déjalo vacío para usar el color por defecto." }
+      - { label: "Cliente", name: "cliente", widget: "string", required: false, hint: "Nombre del cliente o empresa" }
+      - { label: "Rol", name: "rol", widget: "string", required: false, hint: "Tu rol en el proyecto. Ej: Lead UX Designer" }
 
       - label: "Contenido del artículo"
         name: "bloques"

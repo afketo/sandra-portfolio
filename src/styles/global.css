@@ -1,12 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Trocchi&family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Nunito:wght@400;600;700;800&display=swap');
 
 @import "tailwindcss";
 
 :root {
-  --bg: #111111;
-  --fg: #F5F5F0;
-  --fg-muted: rgba(245, 245, 240, 0.45);
-  --border: rgba(245, 245, 240, 0.1);
+  /* ── Fondos ── */
+  --bg: #F7F4EE;             /* bg-base: fondo principal */
+  --bg-secondary: #F2EDE3;   /* bg-surface: secciones alternadas */
+  --bg-card: #EDE8DC;        /* bg-card: cards */
+  --bg-sunken: #E6E0D2;      /* bg-sunken: inputs, áreas hundidas */
+
+  /* ── Texto ── */
+  --fg: #1C1916;             /* text-primary */
+  --fg-secondary: #4A4540;   /* text-secondary */
+  --fg-muted: #7A736A;       /* text-muted */
+  --fg-disabled: #AEA89F;    /* text-disabled */
+  --fg-on-dark: #F5F0E8;     /* text-on-dark */
+  --fg-on-dark-muted: #C4BDB1;
+
+  /* ── Headings ── */
+  --heading-h1: #0F0D0B;
+  --heading-h2: #1C1916;
+  --heading-h3: #2E2A25;
+  --heading-on-dark: #F5F0E8;
+
+  /* ── Hero / Jumbo ── */
+  --hero-bg: #1A1714;
+  --hero-text: #F5F0E8;
+  --hero-text-accent: #D4C9B0;
+
+  /* ── Acento ── */
+  --accent: #8B7355;
+  --accent-hover: #6E5B40;
+  --accent-active: #55452F;
+  --accent-subtle: #D4C9B0;
+  --accent-subtle-text: #5C4A32;
+
+  /* ── Bordes ── */
+  --border: #DDD7CC;
+  --border-subtle: #E8E3D9;
+  --border-strong: #C4BDB1;
+  --border-on-dark: #3A3530;
+  --border-accent: #8B7355;
+
+  /* ── Botones ── */
+  --btn-primary-bg: #1C1916;
+  --btn-primary-text: #F5F0E8;
+  --btn-accent-bg: #8B7355;
+  --btn-accent-hover: #6E5B40;
+
+  /* ── Overlays ── */
+  --overlay-dark: rgba(26, 23, 20, 0.70);
+  --overlay-dark-subtle: rgba(26, 23, 20, 0.40);
+  --overlay-dark-strong: rgba(26, 23, 20, 0.85);
+  --overlay-text: #F5F0E8;
+  --overlay-meta: #D4C9B0;
+
+  /* ── Legado (compatibilidad) ── */
+  --fg-accent: #2E2A25;
+  --accent-warm: #8B7355;
+  --accent-sage: #8B7355;
+  --accent-sage-light: #D4C9B0;
+  --hover-bg: rgba(139, 115, 85, 0.10);
+  --gradient-accent: linear-gradient(135deg, #8B7355 0%, #6E5B40 100%);
 }
 
 * {
@@ -18,23 +73,25 @@
 html {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Trocchi', Georgia, serif;
   -webkit-font-smoothing: antialiased;
 }
 
 body {
   min-height: 100dvh;
+  overflow-x: hidden;
 }
 
 h1, h2, h3 {
-  font-family: 'DM Serif Display', Georgia, serif;
+  font-family: 'Trocchi', Georgia, serif;
 }
 
 ::selection {
-  background: var(--fg);
-  color: var(--bg);
+  background: var(--accent-sage-light);
+  color: #fff;
 }
 
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
+

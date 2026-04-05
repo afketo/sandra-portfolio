@@ -9,6 +9,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 export default defineConfig({
   output: 'server',
 
+  devToolbar: { enabled: false },
+
   vite: {
     plugins: [tailwindcss()]
   },

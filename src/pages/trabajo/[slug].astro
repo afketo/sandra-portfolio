@@ -11,7 +11,7 @@ if (!trabajo || trabajo.data.draft) {
 }
 
 const { Content } = await render(trabajo);
-const { title, categoria, year, cover, images = [], bloques = [] } = trabajo.data;
+const { title, categoria, year, cover, images = [], bloques = [], navColor, cliente, rol } = trabajo.data;
 
 // Parsear cada bloque de texto de Markdown a HTML
 const bloquesConHtml = bloques.map((b: any) =>
@@ -19,19 +19,10 @@ const bloquesConHtml = bloques.map((b: any) =>
 );
 ---
 
-<Layout title={`${title} — Sandra González`}>
+<Layout title={`${title} — Sandra González`} navColor={navColor} fullbleed>
   <article class="project">
 
-    <div class="project-hero reveal">
-      <div class="project-meta">
-        <span class="project-category">{categoria}</span>
-        <span class="sep">·</span>
-        <span class="project-year">{year}</span>
-      </div>
-      <h1 class="project-title">{title}</h1>
-    </div>
-
-    <div class="project-cover reveal reveal-delay-1">
+    <div class="project-cover-full">
       <img src={cover} alt={title} loading="eager" />
     </div>
 
@@ -51,12 +42,12 @@ const bloquesConHtml = bloques.map((b: any) =>
 
       <aside class="project-sidebar">
         <div class="sidebar-item">
-          <span class="sidebar-label">Disciplina</span>
-          <span class="sidebar-value">{categoria}</span>
+          <span class="sidebar-label">Cliente</span>
+          <span class="sidebar-value">{cliente || '—'}</span>
         </div>
         <div class="sidebar-item">
-          <span class="sidebar-label">Año</span>
-          <span class="sidebar-value">{year}</span>
+          <span class="sidebar-label">Rol</span>
+          <span class="sidebar-value">{rol || categoria}</span>
         </div>
         <div class="sidebar-item">
           <span class="sidebar-label">Proyecto</span>
@@ -90,41 +81,20 @@ const bloquesConHtml = bloques.map((b: any) =>
 <style>
   .project { max-width: 76rem; margin: 0 auto; }
 
-  /* ── Hero ── */
-  .project-hero {
-    padding: 5rem 0 3.5rem;
-    border-bottom: 1px solid rgba(245,245,240,0.08);
-    margin-bottom: 4rem;
-  }
-  .project-meta {
-    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;
-  }
-  .project-category {
-    font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgba(245,245,240,0.5);
-  }
-  .sep { color: rgba(245,245,240,0.2); font-size: 0.85rem; }
-  .project-year {
-    font-size: 0.85rem; letter-spacing: 0.08em;
-    color: rgba(245,245,240,0.35);
-  }
-  .project-title {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: clamp(3rem, 7vw, 6rem);
-    font-weight: 400; line-height: 1.02;
-    color: #F5F5F0; max-width: 16ch;
-  }
-
-  /* ── Cover ── */
-  .project-cover {
-    overflow: hidden; margin-bottom: 5rem;
+  /* ── Cover full screen ── */
+  .project-cover-full {
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100dvh;
+    overflow: hidden;
+    margin-bottom: 6rem;
     background: rgba(245,245,240,0.04);
   }
-  .project-cover img {
-    width: 100%; display: block;
-    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+  .project-cover-full img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  .project-cover:hover img { transform: scale(1.02); }
 
   /* ── Layout cuerpo ── */
   .project-layout {
@@ -141,16 +111,16 @@ const bloquesConHtml = bloques.map((b: any) =>
   }
 
   /* Markdown renderizado */
-  .bloque-texto { color: rgba(245,245,240,0.7); }
+  .bloque-texto { color: rgba(28,25,22,0.65); }
   .bloque-texto :global(h2) {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Trocchi', Georgia, serif;
     font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 400; color: #F5F5F0;
+    font-weight: 400; color: var(--fg);
     margin-bottom: 1rem; margin-top: 0.5rem; line-height: 1.2;
   }
   .bloque-texto :global(h3) {
     font-size: 1.1rem; font-weight: 500;
-    color: rgba(245,245,240,0.9); margin-bottom: 0.6rem; margin-top: 0.25rem;
+    color: rgba(28,25,22,0.85); margin-bottom: 0.6rem; margin-top: 0.25rem;
   }
   .bloque-texto :global(p) {
     font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.25rem;
@@ -160,30 +130,30 @@ const bloquesConHtml = bloques.map((b: any) =>
   .bloque-texto :global(li) {
     font-size: 1.05rem; line-height: 1.7;
     padding-left: 1.5rem; position: relative;
-    color: rgba(245,245,240,0.65); margin-bottom: 0.5rem;
+    color: rgba(28,25,22,0.6); margin-bottom: 0.5rem;
   }
   .bloque-texto :global(li)::before {
     content: '—'; position: absolute; left: 0;
-    color: rgba(245,245,240,0.2);
+    color: var(--accent-sage, #6B7A68);
   }
-  .bloque-texto :global(strong) { color: #F5F5F0; font-weight: 500; }
+  .bloque-texto :global(strong) { color: var(--fg); font-weight: 500; }
 
   /* Fallback markdown (Content) */
   .project-body :global(h2) {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 400; color: #F5F5F0;
+    font-family: 'Trocchi', Georgia, serif;
+    font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 400; color: var(--fg);
     margin-bottom: 1rem; line-height: 1.2;
   }
   .project-body :global(p) {
     font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.25rem;
-    color: rgba(245,245,240,0.7);
+    color: rgba(28,25,22,0.65);
   }
   .project-body :global(li) {
     font-size: 1.05rem; padding-left: 1.5rem; position: relative;
-    color: rgba(245,245,240,0.65); margin-bottom: 0.5rem;
+    color: rgba(28,25,22,0.6); margin-bottom: 0.5rem;
   }
   .project-body :global(li)::before {
-    content: '—'; position: absolute; left: 0; color: rgba(245,245,240,0.2);
+    content: '—'; position: absolute; left: 0; color: var(--accent-sage, #6B7A68);
   }
 
   /* Bloque imagen / GIF */
@@ -198,15 +168,15 @@ const bloquesConHtml = bloques.map((b: any) =>
   .project-sidebar { position: sticky; top: calc(72px + 2rem); }
   .sidebar-item {
     padding: 1.4rem 0;
-    border-top: 1px solid rgba(245,245,240,0.08);
+    border-top: 1px solid rgba(28,25,22,0.1);
     display: flex; flex-direction: column; gap: 0.5rem;
   }
-  .sidebar-item:last-child { border-bottom: 1px solid rgba(245,245,240,0.08); }
+  .sidebar-item:last-child { border-bottom: 1px solid rgba(28,25,22,0.1); }
   .sidebar-label {
     font-size: 0.68rem; letter-spacing: 0.16em;
-    text-transform: uppercase; color: rgba(245,245,240,0.3);
+    text-transform: uppercase; color: var(--accent-sage, #6B7A68);
   }
-  .sidebar-value { font-size: 1rem; color: rgba(245,245,240,0.85); }
+  .sidebar-value { font-size: 1rem; color: var(--fg-accent, #3D3530); }
 
   /* ── Gallery ── */
   .project-gallery {
@@ -214,7 +184,7 @@ const bloquesConHtml = bloques.map((b: any) =>
     gap: 1.5rem; margin-bottom: 6rem;
   }
   .project-gallery .gallery-item:first-child { grid-column: 1/-1; }
-  .gallery-item { overflow: hidden; background: rgba(245,245,240,0.04); margin: 0; }
+  .gallery-item { overflow: hidden; background: var(--bg-card, #EEE9E2); margin: 0; }
   .gallery-item img { width: 100%; display: block; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
   .gallery-item:hover img { transform: scale(1.03); }
   @media (max-width:640px) {
@@ -223,14 +193,14 @@ const bloquesConHtml = bloques.map((b: any) =>
   }
 
   /* ── Footer ── */
-  .project-footer { padding-top: 3rem; border-top: 1px solid rgba(245,245,240,0.08); }
+  .project-footer { padding-top: 3rem; border-top: 1px solid rgba(28,25,22,0.1); }
   .back-link {
     display: inline-flex; align-items: center; gap: 0.6rem;
     font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(245,245,240,0.4); text-decoration: none;
+    color: rgba(28,25,22,0.35); text-decoration: none;
     transition: color 0.2s, gap 0.2s;
   }
-  .back-link:hover { color: #F5F5F0; gap: 0.9rem; }
+  .back-link:hover { color: var(--accent-sage, #6B7A68); gap: 0.9rem; }
 
   /* ── Reveal ── */
   .reveal { opacity: 0; transform: translateY(24px);
