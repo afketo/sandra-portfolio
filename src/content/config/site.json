@@ -1,14 +1,20 @@
 {
-  "accessCode": "sandra2024",
-  "siteTitle": "Sandra Gonzalez",
-  "siteSubtitle": "Diseñadora UI/UX",
-  "email": "hola@sandragonzalez.com",
-  "instagram": "https://instagram.com/sandragonzalez",
-  "linkedin": "https://linkedin.com/in/sandragonzalez",
-  "behance": "https://behance.net/sandragonzalez",
   "heroLine1": "Hola! soy",
   "heroLine2": "Sandra González",
   "heroLine3": "product designer",
   "heroLine4": "Con más de 20 años de experiencia aportando actitud\na través de las ideas, la conceptualización\ny el cuidado del detalle.",
-  "heroBgImage": ""
+  "accessCode": "sandra2024",
+  "siteTitle": "Sandra Gonzalez",
+  "instagram": "https://instagram.com/sandragonzalez",
+  "behance": "https://behance.net/sandragonzalez",
+  "heroLabel": {
+    "heroLine1": "Holaa",
+    "heroLine2": "S",
+    "heroLine3": "A",
+    "heroLine4": "P"
+  },
+  "heroBgImage": "",
+  "email": "hola@sandragonzalez.com",
+  "linkedin": "https://linkedin.com/in/sandragonzalez",
+  "siteSubtitle": "Diseñadora UI/UX"
 }
