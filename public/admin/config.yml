@@ -8,12 +8,6 @@ public_folder: "/images"
 site_url: https://fastidious-malasada-8c0a34.netlify.app
 show_preview_links: true
 
-# Permitir GIF, WebP, AVIF además de formatos estándar
-media_library:
-  name: default
-  config:
-    multiple: false
-
 collections:
   - name: "config"
     label: "⚙️ Configuración General"
