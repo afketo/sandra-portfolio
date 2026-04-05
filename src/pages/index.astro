@@ -1,0 +1,263 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allTrabajos = (await getCollection('trabajos', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const featured = allTrabajos.filter((t) => t.data.featured);
+const regular  = allTrabajos.filter((t) => !t.data.featured);
+---
+
+<Layout title="Sandra Gonzalez — Trabajos">
+  <section class="works">
+
+    <!-- Featured (jumbo) -->
+    {featured.map((t, i) => (
+      <a
+        href={`/trabajo/${t.id}`}
+        class="work-jumbo reveal"
+        style={`--i: ${i}`}
+      >
+        <div class="jumbo-image">
+          <img src={t.data.cover} alt={t.data.title} loading="eager" />
+          <div class="jumbo-overlay">
+            <span class="jumbo-cta">Ver proyecto →</span>
+          </div>
+        </div>
+        <div class="jumbo-info">
+          <span class="work-category">{t.data.categoria}</span>
+          <h2 class="jumbo-title">{t.data.title}</h2>
+          <span class="work-year">{t.data.year}</span>
+        </div>
+      </a>
+    ))}
+
+    <!-- Regular grid -->
+    {regular.length > 0 && (
+      <div class="works-grid">
+        {regular.map((t, i) => (
+          <a
+            href={`/trabajo/${t.id}`}
+            class="work-card reveal"
+            style={`--i: ${i + (featured.length)}`}
+          >
+            <div class="work-image-wrapper">
+              <img
+                src={t.data.cover}
+                alt={t.data.title}
+                loading="lazy"
+              />
+              <div class="work-overlay">
+                <span class="work-year">{t.data.year}</span>
+                <span class="work-cta">Ver →</span>
+              </div>
+            </div>
+            <div class="work-info">
+              <span class="work-category">{t.data.categoria}</span>
+              <h2 class="work-title">{t.data.title}</h2>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+
+  </section>
+</Layout>
+
+<style>
+  .works {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+  }
+
+  /* ── Jumbo ── */
+  .work-jumbo {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .jumbo-image {
+    position: relative;
+    aspect-ratio: 16 / 7;
+    overflow: hidden;
+    background: rgba(245,245,240,0.04);
+  }
+
+  .jumbo-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+  }
+
+  .work-jumbo:hover .jumbo-image img {
+    transform: scale(1.03);
+  }
+
+  .jumbo-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,10,0.45);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .work-jumbo:hover .jumbo-overlay {
+    opacity: 1;
+  }
+
+  .jumbo-cta {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: rgba(245,245,240,0.85);
+  }
+
+  .jumbo-info {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .jumbo-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: #F5F5F0;
+    transition: opacity 0.2s;
+  }
+
+  .work-jumbo:hover .jumbo-title {
+    opacity: 0.65;
+  }
+
+  /* ── Regular grid ── */
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem 3.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .works-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .work-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .work-image-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: rgba(245,245,240,0.04);
+  }
+
+  .work-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+  }
+
+  .work-card:hover .work-image-wrapper img {
+    transform: scale(1.04);
+  }
+
+  .work-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,10,0.5);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 1.25rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .work-card:hover .work-overlay {
+    opacity: 1;
+  }
+
+  .work-info {
+    margin-top: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .work-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: #F5F5F0;
+    transition: opacity 0.2s;
+  }
+
+  .work-card:hover .work-title {
+    opacity: 0.65;
+  }
+
+  /* ── Shared labels ── */
+  .work-category {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245,245,240,0.35);
+  }
+
+  .work-year {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,245,240,0.25);
+  }
+
+  .work-cta {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,245,240,0.75);
+  }
+
+  /* ── Reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: calc(var(--i, 0) * 0.1s);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    }),
+    { threshold: 0.06 }
+  );
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>

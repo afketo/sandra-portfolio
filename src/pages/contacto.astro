@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+let siteConfig = { email: '', instagram: '', linkedin: '', behance: '' };
+try {
+  const raw = readFileSync(join(process.cwd(), 'src/content/config/site.json'), 'utf-8');
+  siteConfig = { ...siteConfig, ...JSON.parse(raw) };
+} catch {}
+---
+
+<Layout title="Sandra Gonzalez — Contacto">
+  <div class="contact-wrapper">
+    <h1>Contacto</h1>
+    <p class="contact-intro">
+      ¿Tienes un proyecto en mente? Cuéntame.
+    </p>
+
+    <a href={`mailto:${siteConfig.email}`} class="contact-email">
+      {siteConfig.email}
+    </a>
+
+    <div class="contact-socials">
+      {siteConfig.instagram && (
+        <a href={siteConfig.instagram} target="_blank" rel="noopener" class="social-link">
+          Instagram
+        </a>
+      )}
+      {siteConfig.linkedin && (
+        <a href={siteConfig.linkedin} target="_blank" rel="noopener" class="social-link">
+          LinkedIn
+        </a>
+      )}
+      {siteConfig.behance && (
+        <a href={siteConfig.behance} target="_blank" rel="noopener" class="social-link">
+          Behance
+        </a>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .contact-wrapper {
+    max-width: 48rem;
+    padding-top: 4rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 400;
+    line-height: 1;
+    color: #F5F5F0;
+    margin-bottom: 2rem;
+  }
+
+  .contact-intro {
+    font-size: 1.1rem;
+    color: rgba(245, 245, 240, 0.5);
+    margin-bottom: 3rem;
+  }
+
+  .contact-email {
+    display: block;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    color: #F5F5F0;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(245, 245, 240, 0.15);
+    padding-bottom: 0.5rem;
+    margin-bottom: 4rem;
+    transition: border-color 0.2s;
+    width: fit-content;
+  }
+
+  .contact-email:hover {
+    border-color: rgba(245, 245, 240, 0.6);
+  }
+
+  .contact-socials {
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  .social-link {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245, 245, 240, 0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .social-link:hover {
+    color: #F5F5F0;
+  }
+</style>

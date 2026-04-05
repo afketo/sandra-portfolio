@@ -1,0 +1,37 @@
+---
+interface Props {
+  nombre: string;
+}
+const { nombre } = Astro.props;
+
+const iconos: Record<string, string> = {
+  research: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M17.5 17.5L23 23" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+  </svg>`,
+
+  ui: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="5" width="22" height="18" rx="2" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M3 9h22" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M7 7h.01M10 7h.01M13 7h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    <rect x="7" y="13" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M17 13h4M17 17h4M17 15h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+  </svg>`,
+
+  prototype: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="10" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+    <rect x="17" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+    <rect x="17" y="16" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M11 14h3l3-5M11 14h3l3 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  brand: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 4L17.5 11.5L25 12.5L19.5 17.5L21 25L14 21.5L7 25L8.5 17.5L3 12.5L10.5 11.5L14 4Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+};
+
+const svg = iconos[nombre] ?? iconos['ui'];
+---
+
+<Fragment set:html={svg} />

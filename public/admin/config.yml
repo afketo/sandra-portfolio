@@ -1,0 +1,64 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "config"
+    label: "⚙️ Configuración General"
+    files:
+      - name: "site"
+        label: "Configuración del Sitio"
+        file: "src/content/config/site.json"
+        fields:
+          - { label: "Código de Acceso", name: "accessCode", widget: "string", hint: "Contraseña para acceder al portfolio" }
+          - { label: "Título del Sitio", name: "siteTitle", widget: "string" }
+          - { label: "Subtítulo", name: "siteSubtitle", widget: "string" }
+          - { label: "Email de Contacto", name: "email", widget: "string" }
+          - { label: "Instagram URL", name: "instagram", widget: "string", required: false }
+          - { label: "LinkedIn URL", name: "linkedin", widget: "string", required: false }
+          - { label: "Behance URL", name: "behance", widget: "string", required: false }
+
+  - name: "trabajos"
+    label: "💼 Trabajos"
+    folder: "src/content/trabajos"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} — {{year}}"
+    fields:
+      - { label: "Título del Proyecto", name: "title", widget: "string" }
+      - { label: "Categoría / Disciplina", name: "categoria", widget: "string", hint: "Ej: UI Design · UX Research" }
+      - { label: "Año", name: "year", widget: "number", value_type: "int" }
+      - { label: "⭐ Proyecto Destacado (Jumbo)", name: "featured", widget: "boolean", default: false, hint: "Si está activo, el proyecto ocupa todo el ancho de la página de inicio como pieza principal" }
+      - { label: "Imagen de Portada", name: "cover", widget: "image" }
+      - label: "Galería de Imágenes"
+        name: "images"
+        widget: "list"
+        required: false
+        hint: "Imágenes adicionales que se muestran en la página del proyecto"
+        field: { label: "Imagen", name: "image", widget: "image" }
+      - { label: "Orden de aparición", name: "order", widget: "number", value_type: "int", default: 0, hint: "Número menor = aparece antes" }
+      - { label: "Borrador (oculto)", name: "draft", widget: "boolean", default: false }
+      - { label: "Descripción del Proyecto", name: "body", widget: "markdown" }
+
+  - name: "servicios"
+    label: "🛠 Servicios"
+    folder: "src/content/servicios"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nombre del Servicio", name: "title", widget: "string" }
+      - { label: "Descripción", name: "descripcion", widget: "text" }
+      - label: "Icono"
+        name: "icono"
+        widget: "select"
+        options:
+          - { label: "🔍 Research / Búsqueda", value: "research" }
+          - { label: "🖥 UI Design", value: "ui" }
+          - { label: "⚡ Prototipado", value: "prototype" }
+          - { label: "⭐ Brand Identity", value: "brand" }
+      - { label: "Orden", name: "order", widget: "number", value_type: "int", default: 0 }

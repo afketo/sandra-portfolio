@@ -1,0 +1,57 @@
+---
+import Nav from '../components/Nav.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Sandra Gonzalez — Diseñadora UI/UX',
+  description = 'Portfolio de Sandra Gonzalez, diseñadora UI/UX especializada en experiencias digitales.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      .sg-main {
+        padding-top: calc(72px + 3.5rem);
+        padding-left: 2rem;
+        padding-right: 2rem;
+        padding-bottom: 6rem;
+        min-height: 100dvh;
+      }
+
+      .sg-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 768px) {
+        .sg-main {
+          padding-top: calc(60px + 2rem);
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+          padding-bottom: 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <Nav />
+    <main class="sg-main">
+      <div class="sg-inner">
+        <slot />
+      </div>
+    </main>
+  </body>
+</html>

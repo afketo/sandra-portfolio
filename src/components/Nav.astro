@@ -1,0 +1,117 @@
+---
+import LogoSG from './LogoSG.astro';
+
+const navLinks = [
+  { href: '/', label: 'Trabajos' },
+  { href: '/servicios', label: 'Servicios' },
+  { href: '/sobre-mi', label: 'Sobre mí' },
+  { href: '/contacto', label: 'Contacto' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sg-header">
+  <div class="sg-header-inner">
+    <LogoSG />
+    <nav class="sg-nav">
+      <ul>
+        {navLinks.map(({ href, label }) => (
+          <li>
+            <a
+              href={href}
+              class={currentPath === href ? 'active' : ''}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .sg-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(17, 17, 17, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(245, 245, 240, 0.07);
+  }
+
+  .sg-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    height: 72px;
+  }
+
+  @media (max-width: 768px) {
+    .sg-header-inner {
+      padding: 0 1.5rem;
+      height: 60px;
+    }
+  }
+
+  .sg-nav ul {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sg-nav a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: rgba(245, 245, 240, 0.45);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    position: relative;
+    padding-bottom: 2px;
+  }
+
+  .sg-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #F5F5F0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .sg-nav a:hover {
+    color: #F5F5F0;
+  }
+
+  .sg-nav a:hover::after,
+  .sg-nav a.active::after {
+    transform: scaleX(1);
+  }
+
+  .sg-nav a.active {
+    color: #F5F5F0;
+  }
+
+  @media (max-width: 600px) {
+    .sg-nav ul {
+      gap: 1.25rem;
+    }
+
+    .sg-nav a {
+      font-size: 0.8rem;
+    }
+  }
+</style>

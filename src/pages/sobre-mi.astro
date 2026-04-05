@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Sandra Gonzalez — Sobre mí">
+  <div class="about-grid">
+    <div class="about-text">
+      <h1>Sobre mí</h1>
+      <p class="about-intro">
+        Diseñadora UI/UX con más de 5 años de experiencia creando experiencias digitales
+        que equilibran estética y funcionalidad.
+      </p>
+      <p class="about-body">
+        Trabajo con startups y empresas consolidadas para transformar ideas complejas
+        en interfaces claras, intuitivas y visualmente memorables. Mi proceso parte
+        siempre de la investigación y termina en el detalle más pequeño del píxel.
+      </p>
+      <div class="about-links">
+        <a href="/contacto" class="about-cta">Hablemos</a>
+        <a href="https://linkedin.com/in/sandragonzalez" target="_blank" rel="noopener" class="about-link">
+          LinkedIn →
+        </a>
+      </div>
+    </div>
+
+    <div class="about-image-wrapper">
+      <img
+        src="/images/sandra-gonzalez.jpg"
+        alt="Sandra Gonzalez"
+        class="about-image"
+      />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+    min-height: 70vh;
+  }
+
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .about-text h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 2.5rem;
+    color: #F5F5F0;
+  }
+
+  .about-intro {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.6;
+    color: #F5F5F0;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-body {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(245, 245, 240, 0.55);
+    margin-bottom: 3rem;
+  }
+
+  .about-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .about-cta {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #111111;
+    background: #F5F5F0;
+    padding: 0.75rem 2rem;
+    transition: opacity 0.2s;
+  }
+
+  .about-cta:hover {
+    opacity: 0.85;
+  }
+
+  .about-link {
+    font-size: 0.85rem;
+    color: rgba(245, 245, 240, 0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .about-link:hover {
+    color: #F5F5F0;
+  }
+
+  .about-image-wrapper {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: rgba(245, 245, 240, 0.05);
+  }
+
+  .about-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
