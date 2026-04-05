@@ -40,6 +40,7 @@ import Layout from '../layouts/Layout.astro';
     gap: 6rem;
     align-items: start;
     min-height: 70vh;
+    justify-items: center;
   }
 
   @media (max-width: 768px) {
@@ -47,6 +48,10 @@ import Layout from '../layouts/Layout.astro';
       grid-template-columns: 1fr;
       gap: 3rem;
     }
+  }
+
+  .about-text {
+    text-align: center;
   }
 
   .about-text h1 {
@@ -75,6 +80,7 @@ import Layout from '../layouts/Layout.astro';
   .about-links {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 2rem;
   }
 
