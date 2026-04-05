@@ -44,4 +44,8 @@ bloques:
   - type: imagen
     imagen: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"
     caption: "Pantallas finales del diseño de alta fidelidad"
+
+  - type: imagen
+    imagen: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDd4bTBjaHU4NHh4ZnZ6dWQxb3Bkc3Jmd2V5eG1xaXVpeTdwcGVkZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgzoKnwFNmISR8I/giphy.gif"
+    caption: "Prototipo animado — flujo de transferencia rediseñado"
 ---

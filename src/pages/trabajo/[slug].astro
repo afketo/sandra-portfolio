@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getEntry, render } from 'astro:content';
+import { marked } from 'marked';
 
 const { slug } = Astro.params;
-
 const trabajo = await getEntry('trabajos', slug!);
 
 if (!trabajo || trabajo.data.draft) {
@@ -12,32 +12,34 @@ if (!trabajo || trabajo.data.draft) {
 
 const { Content } = await render(trabajo);
 const { title, categoria, year, cover, images = [], bloques = [] } = trabajo.data;
+
+// Parsear cada bloque de texto de Markdown a HTML
+const bloquesConHtml = bloques.map((b: any) =>
+  b.type === 'texto' ? { ...b, html: marked.parse(b.texto ?? '') } : b
+);
 ---
 
 <Layout title={`${title} — Sandra Gonzalez`}>
   <article class="project">
 
-    <!-- Hero -->
     <div class="project-hero reveal">
       <div class="project-meta">
         <span class="project-category">{categoria}</span>
+        <span class="sep">·</span>
         <span class="project-year">{year}</span>
       </div>
       <h1 class="project-title">{title}</h1>
     </div>
 
-    <!-- Cover -->
     <div class="project-cover reveal reveal-delay-1">
       <img src={cover} alt={title} loading="eager" />
     </div>
 
-    <!-- Cuerpo: bloques o markdown -->
     <div class="project-layout reveal reveal-delay-2">
       <div class="project-body">
-
-        {bloques.length > 0 ? bloques.map((bloque: any) =>
+        {bloquesConHtml.length > 0 ? bloquesConHtml.map((bloque: any) =>
           bloque.type === 'texto' ? (
-            <div class="bloque-texto" set:html={bloque.texto} />
+            <div class="bloque-texto" set:html={bloque.html} />
           ) : bloque.type === 'imagen' ? (
             <figure class="bloque-imagen">
               <img src={bloque.imagen} alt={bloque.caption ?? ''} loading="lazy" />
@@ -45,14 +47,9 @@ const { title, categoria, year, cover, images = [], bloques = [] } = trabajo.dat
             </figure>
           ) : null
         ) : <Content />}
-
       </div>
 
       <aside class="project-sidebar">
-        <div class="sidebar-item">
-          <span class="sidebar-label">Proyecto</span>
-          <span class="sidebar-value">{title}</span>
-        </div>
         <div class="sidebar-item">
           <span class="sidebar-label">Disciplina</span>
           <span class="sidebar-value">{categoria}</span>
@@ -61,10 +58,13 @@ const { title, categoria, year, cover, images = [], bloques = [] } = trabajo.dat
           <span class="sidebar-label">Año</span>
           <span class="sidebar-value">{year}</span>
         </div>
+        <div class="sidebar-item">
+          <span class="sidebar-label">Proyecto</span>
+          <span class="sidebar-value">{title}</span>
+        </div>
       </aside>
     </div>
 
-    <!-- Galería extra si existe -->
     {images.length > 0 && (
       <div class="project-gallery reveal">
         {images.map((img: string, i: number) => (
@@ -88,137 +88,153 @@ const { title, categoria, year, cover, images = [], bloques = [] } = trabajo.dat
 </Layout>
 
 <style>
-  .project { max-width: 80rem; margin: 0 auto; }
+  .project { max-width: 76rem; margin: 0 auto; }
 
-  /* Hero */
+  /* ── Hero ── */
   .project-hero {
-    padding: 4rem 0 3rem;
+    padding: 5rem 0 3.5rem;
     border-bottom: 1px solid rgba(245,245,240,0.08);
-    margin-bottom: 3.5rem;
+    margin-bottom: 4rem;
   }
   .project-meta {
-    display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;
   }
   .project-category {
-    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(245,245,240,0.45);
+    font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(245,245,240,0.5);
   }
-  .project-year { font-size: 0.7rem; color: rgba(245,245,240,0.25); }
+  .sep { color: rgba(245,245,240,0.2); font-size: 0.85rem; }
+  .project-year {
+    font-size: 0.85rem; letter-spacing: 0.08em;
+    color: rgba(245,245,240,0.35);
+  }
   .project-title {
     font-family: 'DM Serif Display', Georgia, serif;
-    font-size: clamp(2.8rem,6vw,5.5rem); font-weight: 400; line-height: 1.05;
-    color: #F5F5F0; max-width: 18ch;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 400; line-height: 1.02;
+    color: #F5F5F0; max-width: 16ch;
   }
 
-  /* Cover */
+  /* ── Cover ── */
   .project-cover {
-    aspect-ratio: 16/9; overflow: hidden; margin-bottom: 5rem;
+    overflow: hidden; margin-bottom: 5rem;
     background: rgba(245,245,240,0.04);
   }
   .project-cover img {
-    width: 100%; height: 100%; object-fit: cover;
+    width: 100%; display: block;
     transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
-    display: block;
   }
   .project-cover:hover img { transform: scale(1.02); }
 
-  /* Layout */
+  /* ── Layout cuerpo ── */
   .project-layout {
-    display: grid; grid-template-columns: 1fr 18rem;
+    display: grid; grid-template-columns: 1fr 17rem;
     gap: 6rem; margin-bottom: 6rem; align-items: start;
   }
   @media (max-width: 900px) {
     .project-layout { grid-template-columns: 1fr; gap: 3rem; }
   }
 
-  /* Body (markdown fallback) */
+  /* ── Cuerpo / Bloques ── */
   .project-body {
-    font-size: 1.05rem; line-height: 1.8;
-    color: rgba(245,245,240,0.65);
-    display: flex; flex-direction: column; gap: 2.5rem;
-  }
-  .project-body :global(h2) {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.6rem; font-weight: 400; color: #F5F5F0;
-    margin-bottom: 0.25rem;
-  }
-  .project-body :global(p) { margin-bottom: 1.2rem; }
-  .project-body :global(ul) { list-style: none; padding: 0; }
-  .project-body :global(li) {
-    padding-left: 1.25rem; position: relative;
-    color: rgba(245,245,240,0.6); margin-bottom: 0.4rem;
-  }
-  .project-body :global(li)::before {
-    content: '—'; position: absolute; left: 0;
-    color: rgba(245,245,240,0.25);
+    display: flex; flex-direction: column; gap: 3rem;
   }
 
-  /* Bloques */
-  .bloque-texto {
-    font-size: 1.05rem; line-height: 1.8;
-    color: rgba(245,245,240,0.65);
-  }
+  /* Markdown renderizado */
+  .bloque-texto { color: rgba(245,245,240,0.7); }
   .bloque-texto :global(h2) {
     font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.6rem; font-weight: 400; color: #F5F5F0; margin-bottom: 0.75rem;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400; color: #F5F5F0;
+    margin-bottom: 1rem; margin-top: 0.5rem; line-height: 1.2;
   }
-  .bloque-texto :global(p) { margin-bottom: 1.2rem; }
+  .bloque-texto :global(h3) {
+    font-size: 1.1rem; font-weight: 500;
+    color: rgba(245,245,240,0.9); margin-bottom: 0.6rem; margin-top: 0.25rem;
+  }
+  .bloque-texto :global(p) {
+    font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.25rem;
+  }
+  .bloque-texto :global(ul),
+  .bloque-texto :global(ol) { list-style: none; padding: 0; margin-bottom: 1.25rem; }
+  .bloque-texto :global(li) {
+    font-size: 1.05rem; line-height: 1.7;
+    padding-left: 1.5rem; position: relative;
+    color: rgba(245,245,240,0.65); margin-bottom: 0.5rem;
+  }
+  .bloque-texto :global(li)::before {
+    content: '—'; position: absolute; left: 0;
+    color: rgba(245,245,240,0.2);
+  }
+  .bloque-texto :global(strong) { color: #F5F5F0; font-weight: 500; }
 
-  .bloque-imagen {
-    margin: 0; display: flex; flex-direction: column; gap: 0.75rem;
+  /* Fallback markdown (Content) */
+  .project-body :global(h2) {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 400; color: #F5F5F0;
+    margin-bottom: 1rem; line-height: 1.2;
   }
-  .bloque-imagen img {
-    width: 100%; display: block; object-fit: cover;
+  .project-body :global(p) {
+    font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.25rem;
+    color: rgba(245,245,240,0.7);
   }
+  .project-body :global(li) {
+    font-size: 1.05rem; padding-left: 1.5rem; position: relative;
+    color: rgba(245,245,240,0.65); margin-bottom: 0.5rem;
+  }
+  .project-body :global(li)::before {
+    content: '—'; position: absolute; left: 0; color: rgba(245,245,240,0.2);
+  }
+
+  /* Bloque imagen / GIF */
+  .bloque-imagen { margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  .bloque-imagen img { width: 100%; display: block; }
   .bloque-imagen figcaption {
-    font-size: 0.75rem; letter-spacing: 0.06em;
+    font-size: 0.78rem; letter-spacing: 0.06em;
     color: rgba(245,245,240,0.3); text-align: center;
   }
 
-  /* Sidebar */
-  .project-sidebar {
-    position: sticky; top: calc(72px + 2rem);
-    display: flex; flex-direction: column;
-  }
+  /* ── Sidebar ── */
+  .project-sidebar { position: sticky; top: calc(72px + 2rem); }
   .sidebar-item {
-    padding: 1.25rem 0; border-top: 1px solid rgba(245,245,240,0.08);
-    display: flex; flex-direction: column; gap: 0.4rem;
+    padding: 1.4rem 0;
+    border-top: 1px solid rgba(245,245,240,0.08);
+    display: flex; flex-direction: column; gap: 0.5rem;
   }
   .sidebar-item:last-child { border-bottom: 1px solid rgba(245,245,240,0.08); }
-  .sidebar-label { font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,245,240,0.3); }
-  .sidebar-value { font-size: 0.9rem; color: rgba(245,245,240,0.8); }
+  .sidebar-label {
+    font-size: 0.68rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: rgba(245,245,240,0.3);
+  }
+  .sidebar-value { font-size: 1rem; color: rgba(245,245,240,0.85); }
 
-  /* Gallery */
+  /* ── Gallery ── */
   .project-gallery {
     display: grid; grid-template-columns: repeat(2,1fr);
     gap: 1.5rem; margin-bottom: 6rem;
   }
   .project-gallery .gallery-item:first-child { grid-column: 1/-1; }
-  .gallery-item { overflow: hidden; background: rgba(245,245,240,0.04); aspect-ratio: 16/9; margin: 0; }
-  .gallery-item:first-child { aspect-ratio: 21/9; }
-  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
+  .gallery-item { overflow: hidden; background: rgba(245,245,240,0.04); margin: 0; }
+  .gallery-item img { width: 100%; display: block; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
   .gallery-item:hover img { transform: scale(1.03); }
-  @media (max-width: 640px) {
+  @media (max-width:640px) {
     .project-gallery { grid-template-columns: 1fr; }
     .project-gallery .gallery-item:first-child { grid-column: 1; }
-    .gallery-item:first-child { aspect-ratio: 16/9; }
   }
 
-  /* Footer */
+  /* ── Footer ── */
   .project-footer { padding-top: 3rem; border-top: 1px solid rgba(245,245,240,0.08); }
   .back-link {
     display: inline-flex; align-items: center; gap: 0.6rem;
-    font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+    font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
     color: rgba(245,245,240,0.4); text-decoration: none;
     transition: color 0.2s, gap 0.2s;
   }
   .back-link:hover { color: #F5F5F0; gap: 0.9rem; }
 
-  /* Reveal */
-  .reveal {
-    opacity: 0; transform: translateY(28px);
-    transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
-  }
+  /* ── Reveal ── */
+  .reveal { opacity: 0; transform: translateY(24px);
+    transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.2s; }
@@ -230,7 +246,7 @@ const { title, categoria, year, cover, images = [], bloques = [] } = trabajo.dat
     (entries) => entries.forEach((e) => {
       if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
     }),
-    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
   );
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
 </script>

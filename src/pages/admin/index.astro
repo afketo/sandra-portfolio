@@ -10,8 +10,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
-    <!-- El CSS se carga aquí: Decap CMS renderiza en el mismo documento -->
-    <link rel="stylesheet" href="/admin/admin.css" />
     <style>
       html, body { background: #0d0d0d !important; margin: 0; }
     </style>
@@ -32,9 +30,75 @@
         });
       }
 
+      // Inyectar CSS oscuro DESPUÉS de que Decap renderice (styled-components gana cascada si se carga antes)
+      function injectDarkTheme() {
+        var style = document.createElement('style');
+        style.textContent = `
+          /* Fondo general */
+          body, #nc-root, [class*="App__"] { background: #0d0d0d !important; color: #F5F5F0 !important; }
+
+          /* Cabecera */
+          header, [class*="Header"], [class*="Toolbar"] {
+            background: #161616 !important;
+            border-bottom: 1px solid rgba(245,245,240,0.08) !important;
+            box-shadow: none !important;
+          }
+
+          /* Sidebar / colección */
+          [class*="CollectionPage"], [class*="Sidebar"], nav[class*="Nav"] {
+            background: #111 !important;
+            border-right: 1px solid rgba(245,245,240,0.08) !important;
+          }
+
+          /* Inputs, textareas, selects */
+          input, textarea, select, [class*="Input"], [class*="TextInput"], [class*="Select"] {
+            background: #1a1a1a !important;
+            color: #F5F5F0 !important;
+            border-color: rgba(245,245,240,0.12) !important;
+          }
+          input:focus, textarea:focus, select:focus {
+            border-color: rgba(245,245,240,0.35) !important;
+            outline: none !important;
+          }
+
+          /* Labels */
+          label, [class*="Label"] { color: rgba(245,245,240,0.55) !important; font-size: 0.72rem !important; letter-spacing: 0.12em !important; text-transform: uppercase !important; }
+
+          /* Botones */
+          button[class*="primary"], [class*="Button"][class*="primary"] {
+            background: #F5F5F0 !important; color: #111 !important; border: none !important;
+          }
+          button, [class*="Button"] {
+            background: rgba(245,245,240,0.07) !important;
+            color: #F5F5F0 !important;
+            border: 1px solid rgba(245,245,240,0.1) !important;
+            border-radius: 4px !important;
+          }
+
+          /* Cards de la lista de entradas */
+          [class*="ListCard"], [class*="EntryCard"] {
+            background: #161616 !important;
+            border: 1px solid rgba(245,245,240,0.07) !important;
+          }
+
+          /* Markdown editor */
+          [class*="EditorControl"], [class*="RawEditor"] {
+            background: #1a1a1a !important;
+            color: #F5F5F0 !important;
+          }
+
+          /* Scrollbar */
+          * { scrollbar-color: rgba(245,245,240,0.15) transparent; }
+        `;
+        document.head.appendChild(style);
+      }
+
       // Registrar preview template y estilos cuando CMS esté listo
       function setupCMS() {
         if (!window.CMS) return;
+
+        // Inyectar tema oscuro ahora que Decap ya cargó su CSS
+        injectDarkTheme();
 
         // Estilos en el iframe de preview
         CMS.registerPreviewStyle('/admin/admin.css');
