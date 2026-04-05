@@ -3,7 +3,10 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 // Rutas que no requieren autenticación
-const PUBLIC_PATHS = ['/lock', '/api/unlock'];
+// Nota: '/' es pública para que Netlify Identity pueda procesar
+// los tokens (#invite_token, #recovery_token) en el hash de la URL,
+// ya que los redirects de servidor no preservan el hash.
+const PUBLIC_PATHS = ['/', '/lock', '/api/unlock'];
 
 function getAccessCode(): string {
   try {
