@@ -2,8 +2,6 @@ backend:
   name: git-gateway
   branch: main
 
-local_backend: true
-
 media_folder: "public/images"
 public_folder: "/images"
 
@@ -33,17 +31,29 @@ collections:
       - { label: "Título del Proyecto", name: "title", widget: "string" }
       - { label: "Categoría / Disciplina", name: "categoria", widget: "string", hint: "Ej: UI Design · UX Research" }
       - { label: "Año", name: "year", widget: "number", value_type: "int" }
-      - { label: "⭐ Proyecto Destacado (Jumbo)", name: "featured", widget: "boolean", default: false, hint: "Si está activo, el proyecto ocupa todo el ancho de la página de inicio como pieza principal" }
+      - { label: "⭐ Proyecto Destacado (Jumbo)", name: "featured", widget: "boolean", default: false, hint: "Si está activo ocupa todo el ancho de la página de inicio" }
       - { label: "Imagen de Portada", name: "cover", widget: "image" }
-      - label: "Galería de Imágenes"
-        name: "images"
-        widget: "list"
-        required: false
-        hint: "Imágenes adicionales que se muestran en la página del proyecto"
-        field: { label: "Imagen", name: "image", widget: "image" }
       - { label: "Orden de aparición", name: "order", widget: "number", value_type: "int", default: 0, hint: "Número menor = aparece antes" }
       - { label: "Borrador (oculto)", name: "draft", widget: "boolean", default: false }
-      - { label: "Descripción del Proyecto", name: "body", widget: "markdown" }
+
+      - label: "Contenido del artículo"
+        name: "bloques"
+        widget: "list"
+        required: false
+        hint: "Añade bloques de texto e imágenes en el orden que quieras"
+        types:
+          - label: "📝 Bloque de texto"
+            name: "texto"
+            widget: "object"
+            fields:
+              - { label: "Texto", name: "texto", widget: "markdown", hint: "Puedes usar títulos, negritas, listas, etc." }
+
+          - label: "🖼 Bloque de imagen"
+            name: "imagen"
+            widget: "object"
+            fields:
+              - { label: "Imagen", name: "imagen", widget: "image" }
+              - { label: "Pie de foto (opcional)", name: "caption", widget: "string", required: false }
 
   - name: "servicios"
     label: "🛠 Servicios"
