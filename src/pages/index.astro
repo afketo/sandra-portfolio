@@ -24,7 +24,7 @@ if (!isAuthenticated) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sandra Gonzalez</title>
+  <title>Sandra González</title>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"><\/script>
   <style>body{background:#111111;margin:0;min-height:100dvh;}</style>
 </head>
@@ -53,7 +53,7 @@ const featured = allTrabajos.filter((t) => t.data.featured);
 const regular  = allTrabajos.filter((t) => !t.data.featured);
 ---
 
-<Layout title="Sandra Gonzalez — Trabajos">
+<Layout title="Sandra González — Trabajos">
   <section class="works">
 
     <div class="intro reveal">
@@ -67,12 +67,14 @@ const regular  = allTrabajos.filter((t) => !t.data.featured);
       <a href={`/trabajo/${t.id}`} class="work-jumbo reveal" style={`--i: ${i}`}>
         <div class="jumbo-image">
           <img src={t.data.cover} alt={t.data.title} loading="eager" />
-          <div class="jumbo-overlay"><span class="jumbo-cta">Ver proyecto →</span></div>
+          <div class="jumbo-overlay">
+            <span class="work-year">{t.data.year}</span>
+            <span class="jumbo-cta">Ver proyecto →</span>
+          </div>
         </div>
         <div class="jumbo-info">
           <span class="work-category">{t.data.categoria}</span>
           <h2 class="jumbo-title">{t.data.title}</h2>
-          <span class="work-year">{t.data.year}</span>
         </div>
       </a>
     ))}
@@ -85,7 +87,7 @@ const regular  = allTrabajos.filter((t) => !t.data.featured);
               <img src={t.data.cover} alt={t.data.title} loading="lazy" />
               <div class="work-overlay">
                 <span class="work-year">{t.data.year}</span>
-                <span class="work-cta">Ver →</span>
+                <span class="work-cta">Ver proyecto →</span>
               </div>
             </div>
             <div class="work-info">
@@ -117,7 +119,7 @@ const regular  = allTrabajos.filter((t) => !t.data.featured);
 
   .jumbo-overlay {
     position: absolute; inset: 0; background: rgba(10,10,10,0.45);
-    display: flex; align-items: flex-end; justify-content: flex-end;
+    display: flex; align-items: flex-end; justify-content: space-between;
     padding: 2rem; opacity: 0; transition: opacity 0.3s ease;
   }
   .work-jumbo:hover .jumbo-overlay { opacity: 1; }
@@ -187,7 +189,7 @@ const regular  = allTrabajos.filter((t) => !t.data.featured);
   .intro-rule { width: 3rem; height: 1px; background: rgba(245,245,240,0.15); }
 
   .work-category { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(245,245,240,0.35); }
-  .work-year     { font-size: 0.75rem; letter-spacing: 0.1em; color: rgba(245,245,240,0.25); }
+  .work-year     { font-size: 1.1rem; letter-spacing: 0.08em; font-weight: 300; color: rgba(245,245,240,0.7); }
   .work-cta      { font-size: 0.75rem; letter-spacing: 0.1em; color: rgba(245,245,240,0.75); }
 
   .reveal {

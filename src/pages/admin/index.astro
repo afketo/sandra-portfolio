@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin — Sandra Gonzalez</title>
+    <title>Admin — Sandra González</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
@@ -30,66 +30,88 @@
         });
       }
 
-      // Inyectar CSS oscuro DESPUÉS de que Decap renderice (styled-components gana cascada si se carga antes)
+      // Inyectar CSS oscuro — solo selectores de elementos HTML nativos (Decap usa styled-components con clases hashed)
       function injectDarkTheme() {
         var style = document.createElement('style');
+        style.id = 'sg-dark-theme';
         style.textContent = `
-          /* Fondo general */
-          body, #nc-root, [class*="App__"] { background: #0d0d0d !important; color: #F5F5F0 !important; }
+          html, body { background: #0d0d0d !important; color: #F5F5F0 !important; font-family: 'DM Sans', sans-serif !important; }
+          #nc-root { background: #0d0d0d !important; }
 
-          /* Cabecera */
-          header, [class*="Header"], [class*="Toolbar"] {
-            background: #161616 !important;
-            border-bottom: 1px solid rgba(245,245,240,0.08) !important;
-            box-shadow: none !important;
-          }
+          /* Todos los divs con fondo blanco/gris claro → oscuro */
+          #nc-root div { color: #F5F5F0; }
 
-          /* Sidebar / colección */
-          [class*="CollectionPage"], [class*="Sidebar"], nav[class*="Nav"] {
-            background: #111 !important;
-            border-right: 1px solid rgba(245,245,240,0.08) !important;
-          }
+          /* Cabecera top */
+          #nc-root header { background: #161616 !important; border-bottom: 1px solid rgba(245,245,240,0.08) !important; box-shadow: none !important; }
+          #nc-root header * { color: #F5F5F0 !important; }
+          #nc-root header a { color: rgba(245,245,240,0.7) !important; text-decoration: none !important; }
+          #nc-root header a:hover { color: #F5F5F0 !important; }
+          #nc-root header button { background: transparent !important; border: 1px solid rgba(245,245,240,0.15) !important; color: #F5F5F0 !important; border-radius: 4px !important; cursor: pointer !important; }
+
+          /* Nav lateral */
+          #nc-root nav { background: #111111 !important; border-right: 1px solid rgba(245,245,240,0.07) !important; }
+          #nc-root nav a { color: rgba(245,245,240,0.5) !important; }
+          #nc-root nav a:hover, #nc-root nav a[class*="active"] { color: #F5F5F0 !important; background: rgba(245,245,240,0.05) !important; }
+
+          /* Área principal */
+          #nc-root main { background: #0d0d0d !important; }
+
+          /* Todas las secciones y paneles */
+          #nc-root section { background: #0d0d0d !important; }
 
           /* Inputs, textareas, selects */
-          input, textarea, select, [class*="Input"], [class*="TextInput"], [class*="Select"] {
+          #nc-root input, #nc-root textarea, #nc-root select {
             background: #1a1a1a !important;
             color: #F5F5F0 !important;
-            border-color: rgba(245,245,240,0.12) !important;
+            border: 1px solid rgba(245,245,240,0.12) !important;
+            border-radius: 4px !important;
           }
-          input:focus, textarea:focus, select:focus {
-            border-color: rgba(245,245,240,0.35) !important;
+          #nc-root input:focus, #nc-root textarea:focus, #nc-root select:focus {
+            border-color: rgba(245,245,240,0.4) !important;
             outline: none !important;
           }
+          #nc-root input::placeholder, #nc-root textarea::placeholder { color: rgba(245,245,240,0.25) !important; }
 
           /* Labels */
-          label, [class*="Label"] { color: rgba(245,245,240,0.55) !important; font-size: 0.72rem !important; letter-spacing: 0.12em !important; text-transform: uppercase !important; }
+          #nc-root label { color: rgba(245,245,240,0.45) !important; font-size: 0.7rem !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; }
 
-          /* Botones */
-          button[class*="primary"], [class*="Button"][class*="primary"] {
-            background: #F5F5F0 !important; color: #111 !important; border: none !important;
-          }
-          button, [class*="Button"] {
-            background: rgba(245,245,240,0.07) !important;
+          /* Botones genéricos */
+          #nc-root button {
+            background: rgba(245,245,240,0.06) !important;
             color: #F5F5F0 !important;
             border: 1px solid rgba(245,245,240,0.1) !important;
             border-radius: 4px !important;
+            cursor: pointer !important;
+          }
+          #nc-root button:hover { background: rgba(245,245,240,0.12) !important; }
+
+          /* Botón "Publicar" / primario — suele ser el último botón destacado */
+          #nc-root header button:last-child,
+          #nc-root button[type="submit"] {
+            background: #F5F5F0 !important;
+            color: #111 !important;
+            border: none !important;
+            font-weight: 500 !important;
           }
 
-          /* Cards de la lista de entradas */
-          [class*="ListCard"], [class*="EntryCard"] {
-            background: #161616 !important;
-            border: 1px solid rgba(245,245,240,0.07) !important;
-          }
+          /* Listas de entradas — cards */
+          #nc-root ul { list-style: none !important; }
+          #nc-root ul li { background: #161616 !important; border: 1px solid rgba(245,245,240,0.06) !important; border-radius: 4px !important; margin-bottom: 0.5rem !important; }
+          #nc-root ul li a { color: #F5F5F0 !important; }
+          #nc-root ul li:hover { border-color: rgba(245,245,240,0.15) !important; background: #1a1a1a !important; }
 
-          /* Markdown editor */
-          [class*="EditorControl"], [class*="RawEditor"] {
-            background: #1a1a1a !important;
-            color: #F5F5F0 !important;
-          }
+          /* Texto general */
+          #nc-root p, #nc-root span, #nc-root h1, #nc-root h2, #nc-root h3, #nc-root h4 { color: #F5F5F0 !important; }
+
+          /* Separadores */
+          #nc-root hr { border-color: rgba(245,245,240,0.08) !important; }
 
           /* Scrollbar */
-          * { scrollbar-color: rgba(245,245,240,0.15) transparent; }
+          * { scrollbar-width: thin; scrollbar-color: rgba(245,245,240,0.12) transparent; }
         `;
+        // Eliminar inyección previa si existe
+        var prev = document.getElementById('sg-dark-theme');
+        if (prev) prev.remove();
         document.head.appendChild(style);
       }
 
