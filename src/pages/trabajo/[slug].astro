@@ -203,34 +203,53 @@ const bloquesRender = bloques.map((b: any) => {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
-    align-items: center;
+    align-items: start;
+  }
+
+  /* min-width: 0 es crítico — sin esto el contenido desborda el grid */
+  .col-texto,
+  .col-imagen {
+    min-width: 0;
   }
 
   .bloque-columnas--imagen-izq .col-imagen { order: -1; }
 
-  .col-texto { color: rgba(28,25,22,0.65); }
+  .col-texto { color: rgba(28,25,22,0.65); overflow-wrap: break-word; word-break: break-word; }
   .col-texto :global(h2) {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.7rem); font-weight: 400;
     color: var(--fg); margin-bottom: 0.8rem; line-height: 1.2;
   }
-  .col-texto :global(p) { font-size: 1rem; line-height: 1.8; margin-bottom: 1rem; }
+  .col-texto :global(h3) {
+    font-size: 1rem; font-weight: 500;
+    color: rgba(28,25,22,0.85); margin-bottom: 0.5rem;
+  }
+  .col-texto :global(p) { font-size: 0.97rem; line-height: 1.8; margin-bottom: 1rem; }
+  .col-texto :global(ul), .col-texto :global(ol) { list-style: none; padding: 0; margin-bottom: 1rem; }
   .col-texto :global(li) {
-    font-size: 1rem; padding-left: 1.25rem;
-    position: relative; color: rgba(28,25,22,0.6); margin-bottom: 0.4rem;
+    font-size: 0.97rem; padding-left: 1.25rem;
+    position: relative; color: rgba(28,25,22,0.6); margin-bottom: 0.4rem; line-height: 1.7;
   }
   .col-texto :global(li)::before { content: '—'; position: absolute; left: 0; color: var(--accent-sage, #6B7A68); }
+  .col-texto :global(strong) { color: var(--fg); font-weight: 500; }
 
   .col-imagen { margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-  .col-imagen img { width: 100%; display: block; }
+  .col-imagen img {
+    width: 100%;
+    height: auto;
+    max-height: 520px;
+    object-fit: cover;
+    display: block;
+  }
   .col-imagen figcaption {
     font-size: 0.75rem; letter-spacing: 0.06em;
     color: rgba(28,25,22,0.35); text-align: center;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 700px) {
     .bloque-columnas { grid-template-columns: 1fr; gap: 2rem; }
     .bloque-columnas--imagen-izq .col-imagen { order: 0; }
+    .col-imagen img { max-height: 320px; }
   }
 
   /* ── Sidebar ── */
