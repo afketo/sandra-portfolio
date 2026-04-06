@@ -11,7 +11,7 @@
 
   /* ── Texto ── */
   --fg: #1C1916;             /* text-primary */
-  --fg-secondary: #4A4540;   /* text-secondary */
+  --fg-secondary: #3A3530;   /* text-secondary — contraste 5.1:1 sobre bg-base (WCAG AA) */
   --fg-muted: #7A736A;       /* text-muted */
   --fg-disabled: #AEA89F;    /* text-disabled */
   --fg-on-dark: #F5F0E8;     /* text-on-dark */

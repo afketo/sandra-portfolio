@@ -483,6 +483,16 @@ const bloquesRender = bloques.map((b: any) => {
     transition-delay: calc(var(--i, 0) * 0.07s);
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ken-burns { animation: none !important; }
+    .parallax-img { will-change: auto; }
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
 </style>
 
 <script>
@@ -502,9 +512,10 @@ const bloquesRender = bloques.map((b: any) => {
       io.observe(el);
     });
 
-    // Parallax suave en el cover (solo si hay imagen, no video)
+    // Parallax suave en el cover (solo si hay imagen, no video, y no hay preferencia de reducción)
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const parallaxEl = document.querySelector('.parallax-img') as HTMLElement | null;
-    if (parallaxEl) {
+    if (parallaxEl && !prefersReduced) {
       const coverEl = parallaxEl.closest('.project-cover-parallax') as HTMLElement | null;
       let ticking = false;
       const onScroll = () => {

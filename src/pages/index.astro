@@ -258,6 +258,15 @@ const regular     = visibles.filter((t) => !t.content.featured);
     transition-delay: calc(var(--i, 0) * 0.08s);
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-arrow { animation: none !important; }
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
 </style>
 
 <script>
