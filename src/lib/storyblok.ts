@@ -1,7 +1,8 @@
 import { useStoryblokApi } from '@storyblok/astro';
 
-const isProd = process.env.NODE_ENV === 'production';
-const version = isProd ? 'published' : 'draft';
+// Siempre usamos draft + preview token.
+// El sitio tiene su propia autenticación por contraseña.
+const version = 'draft' as const;
 
 export async function getTrabajos() {
   const api = useStoryblokApi();
@@ -33,10 +34,9 @@ export async function getServicios() {
   return data.stories as StoryblokStory[];
 }
 
-// Cache simple en memoria (se resetea por instancia serverless, válido para datos que cambian poco)
 let _siteConfig: Record<string, string> | null = null;
 let _siteConfigTs = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+const CACHE_TTL = 5 * 60 * 1000;
 
 export async function getSiteConfig(): Promise<Record<string, string>> {
   const now = Date.now();
