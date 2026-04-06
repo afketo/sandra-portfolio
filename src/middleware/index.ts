@@ -3,6 +3,10 @@ import { getSiteConfig } from '../lib/storyblok';
 
 const PUBLIC_PATHS = ['/lock', '/api/unlock'];
 
+// Token secreto para el editor visual de Storyblok
+// Debe coincidir con el configurado en Storyblok → Settings → Visual Editor → Preview URL
+const PREVIEW_TOKEN = process.env.STORYBLOK_PREVIEW_SECRET || 'sb-preview-2024';
+
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname, searchParams } = context.url;
 
@@ -15,8 +19,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  // Permitir el iframe del editor visual de Storyblok
-  if (searchParams.has('_storyblok')) {
+  // Permitir el editor visual de Storyblok (token en URL o parámetro _storyblok)
+  if (
+    searchParams.get('preview') === PREVIEW_TOKEN ||
+    searchParams.has('_storyblok')
+  ) {
     return next();
   }
 
