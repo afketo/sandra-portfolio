@@ -28,8 +28,8 @@ const hasError = Astro.url.searchParams.get('error') === '1';
       <!-- Logo SG animado -->
       <div class="logo-wrapper" aria-label="Sandra González">
         <svg
-          width="64"
-          height="64"
+          width="96"
+          height="96"
           viewBox="0 0 40 40"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +58,7 @@ const hasError = Astro.url.searchParams.get('error') === '1';
       <form method="POST" action="/api/unlock" class="lock-form">
         <div class="input-wrapper">
           <input
-            type="password"
+            type="text"
             name="code"
             placeholder="·  ·  ·  ·  ·"
             autocomplete="off"
@@ -133,7 +133,7 @@ const hasError = Astro.url.searchParams.get('error') === '1';
   .lock-svg { display: block; }
   .lock-name {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: 0.7rem;
+    font-size: 1rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: #7A736A;
