@@ -1,43 +1,82 @@
-# Astro Starter Kit: Minimal
+# Sandra González — Portfolio
 
-```sh
-npm create astro@latest -- --template minimal
+Portfolio web privado para Sandra González, diseñadora UI/UX. Acceso mediante código personal configurable desde el CMS.
+
+## Stack
+
+- **Framework:** [Astro](https://astro.build) (SSR)
+- **Estilos:** [Tailwind CSS](https://tailwindcss.com) v4
+- **CMS:** [Storyblok](https://storyblok.com) — editor visual, sin conocimientos técnicos
+- **Hosting:** [Vercel](https://vercel.com)
+
+## Estructura del proyecto
+
+```
+src/
+├── components/         # Componentes reutilizables (Nav, Footer, LogoSG...)
+├── layouts/            # Layout principal con nav y estilos globales
+├── lib/
+│   └── storyblok.ts    # Helper de API: getTrabajos, getServicios, getSiteConfig
+├── middleware/         # Protección por contraseña (cookie sg_session)
+├── pages/
+│   ├── index.astro           # Portfolio grid (trabajos)
+│   ├── trabajo/[slug].astro  # Página de proyecto individual
+│   ├── servicios.astro       # Servicios ofrecidos
+│   ├── sobre-mi.astro        # Página bio
+│   ├── contacto.astro        # Contacto y redes
+│   ├── lock.astro            # Pantalla de acceso con contraseña
+│   └── api/unlock.ts         # Endpoint que valida el código y setea la cookie
+└── styles/
+    └── global.css            # Tokens de color, tipografía Trocchi, variables CSS
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Gestión de contenido (Storyblok)
 
-## 🚀 Project Structure
+Todo el contenido se gestiona desde **storyblok.com**. Estructura de stories:
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+trabajos/          → Proyectos del portfolio (componente: trabajo)
+servicios/         → Servicios ofrecidos (componente: servicio)
+config/site        → Configuración global del sitio (componente: site_config)
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Componentes disponibles en cada trabajo
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Bloque | Uso |
+|---|---|
+| `bloque_texto` | Texto enriquecido con Markdown (títulos, listas, párrafos) |
+| `bloque_imagen` | Imagen o GIF con pie de foto opcional |
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Campos de configuración global (`config/site`)
 
-## 🧞 Commands
+`heroLine1..4`, `heroBgImage`, `aboutIntro`, `aboutBody`, `aboutImage`, `contactIntro`, `email`, `instagram`, `linkedin`, `behance`, `accessCode`
 
-All commands are run from the root of the project, from a terminal:
+## Variables de entorno
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Crear un archivo `.env` en local (no se sube al repo):
 
-## 👀 Want to learn more?
+```env
+STORYBLOK_PREVIEW_TOKEN=tu_preview_token
+STORYBLOK_PUBLIC_TOKEN=tu_public_token
+STORYBLOK_SPACE_ID=tu_space_id
+ACCESS_CODE=tu_codigo_de_acceso   # fallback si Storyblok no está disponible
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+En Vercel estas variables se configuran en **Settings → Environment Variables**.
+
+## Desarrollo local
+
+```bash
+npm install
+npm run dev       # http://localhost:4321
+```
+
+## Deploy
+
+El deploy es automático en Vercel al hacer push a `main`. No se requiere ninguna configuración adicional.
+
+## Acceso protegido
+
+La web requiere un código de acceso que se valida contra `accessCode` en `config/site` de Storyblok. Sandra puede cambiarlo desde el CMS sin tocar código. El código se almacena en una cookie de sesión (`sg_session`).
+
+El editor visual de Storyblok bypasea el lock automáticamente mediante el parámetro `_storyblok` en la URL.
