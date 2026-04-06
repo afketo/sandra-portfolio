@@ -10,32 +10,42 @@ if (!story || story.content.draft) {
   return Astro.redirect('/');
 }
 
-const { title, categoria, year, cover, images = [], bloques = [], navColor, cliente, rol } = story.content;
-
+const { title, categoria, year, cover, bloques = [], navColor, cliente, rol } = story.content;
 const coverUrl = typeof cover === 'object' ? cover.filename : cover;
 
-const bloquesConHtml = bloques.map((b: any) => {
-  if (b.component === 'bloque_texto' || b.type === 'texto') {
+const bloquesRender = bloques.map((b: any) => {
+  const type = b.component || b.type;
+  if (type === 'bloque_texto') {
     return { ...b, _type: 'texto', html: marked.parse(b.texto ?? '') };
   }
-  if (b.component === 'bloque_imagen' || b.type === 'imagen') {
+  if (type === 'bloque_imagen') {
     const imgUrl = typeof b.imagen === 'object' ? b.imagen?.filename : b.imagen;
     return { ...b, _type: 'imagen', _imgUrl: imgUrl };
   }
-  return { ...b, _type: b.component || b.type };
+  if (type === 'bloque_columnas') {
+    const imgUrl = typeof b.imagen === 'object' ? b.imagen?.filename : b.imagen;
+    return { ...b, _type: 'columnas', _imgUrl: imgUrl, html: marked.parse(b.texto ?? '') };
+  }
+  return { ...b, _type: type };
 });
 ---
 
 <Layout title={`${title} — Sandra González`} navColor={navColor} fullbleed>
   <article class="project">
 
-    <div class="project-cover-full">
-      <img src={coverUrl} alt={title} loading="eager" />
+    <!-- Cover con parallax -->
+    <div class="project-cover-parallax">
+      <div class="parallax-img" style={`background-image: url('${coverUrl}')`}></div>
+      <div class="cover-meta">
+        <span class="cover-cat">{categoria}</span>
+        <span class="cover-year">{year}</span>
+      </div>
     </div>
 
+    <!-- Sidebar + cuerpo -->
     <div class="project-layout reveal reveal-delay-2">
       <div class="project-body">
-        {bloquesConHtml.map((bloque: any) =>
+        {bloquesRender.map((bloque: any) => (
           bloque._type === 'texto' ? (
             <div class="bloque-texto" set:html={bloque.html} />
           ) : bloque._type === 'imagen' ? (
@@ -43,8 +53,16 @@ const bloquesConHtml = bloques.map((b: any) => {
               <img src={bloque._imgUrl} alt={bloque.caption ?? ''} loading="lazy" />
               {bloque.caption && <figcaption>{bloque.caption}</figcaption>}
             </figure>
+          ) : bloque._type === 'columnas' ? (
+            <div class={`bloque-columnas bloque-columnas--${bloque.layout || 'texto-izq'}`}>
+              <div class="col-texto" set:html={bloque.html} />
+              <figure class="col-imagen">
+                <img src={bloque._imgUrl} alt={bloque.caption ?? ''} loading="lazy" />
+                {bloque.caption && <figcaption>{bloque.caption}</figcaption>}
+              </figure>
+            </div>
           ) : null
-        )}
+        ))}
       </div>
 
       <aside class="project-sidebar">
@@ -57,24 +75,11 @@ const bloquesConHtml = bloques.map((b: any) => {
           <span class="sidebar-value">{rol || categoria}</span>
         </div>
         <div class="sidebar-item">
-          <span class="sidebar-label">Proyecto</span>
-          <span class="sidebar-value">{title}</span>
+          <span class="sidebar-label">Año</span>
+          <span class="sidebar-value">{year}</span>
         </div>
       </aside>
     </div>
-
-    {images.length > 0 && (
-      <div class="project-gallery reveal">
-        {images.map((img: any, i: number) => {
-          const imgUrl = typeof img === 'object' ? img.filename : img;
-          return (
-            <figure class={`gallery-item reveal reveal-delay-${(i % 3) + 1}`}>
-              <img src={imgUrl} alt={`${title} — imagen ${i + 1}`} loading="lazy" />
-            </figure>
-          );
-        })}
-      </div>
-    )}
 
     <div class="project-footer reveal">
       <a href="/" class="back-link">
@@ -91,33 +96,89 @@ const bloquesConHtml = bloques.map((b: any) => {
 <style>
   .project { max-width: 76rem; margin: 0 auto; }
 
-  .project-cover-full {
-    position: relative; width: 100vw; left: 50%;
-    transform: translateX(-50%); height: 100dvh;
-    overflow: hidden; margin-bottom: 6rem;
-    background: rgba(245,245,240,0.04);
+  /* ── Cover Parallax ── */
+  .project-cover-parallax {
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100dvh;
+    overflow: hidden;
+    margin-bottom: 7rem;
   }
-  .project-cover-full img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+  .parallax-img {
+    position: absolute;
+    inset: -20%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    will-change: transform;
+  }
+
+  .cover-meta {
+    position: absolute;
+    bottom: 2.5rem;
+    left: max(2rem, calc((100vw - 1100px) / 2));
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    z-index: 2;
+  }
+
+  .cover-cat {
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(245, 240, 232, 0.7);
+  }
+
+  .cover-year {
+    font-family: 'Trocchi', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 400;
+    color: rgba(245, 240, 232, 0.9);
+    line-height: 1;
+  }
+
+  /* Overlay sutil sobre el cover */
+  .project-cover-parallax::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(26, 23, 20, 0.25) 0%,
+      rgba(26, 23, 20, 0.1) 50%,
+      rgba(26, 23, 20, 0.55) 100%
+    );
+    z-index: 1;
+  }
+
+  /* ── Layout cuerpo ── */
   .project-layout {
-    display: grid; grid-template-columns: 1fr 17rem;
-    gap: 6rem; margin-bottom: 6rem; align-items: start;
+    display: grid;
+    grid-template-columns: 1fr 17rem;
+    gap: 6rem;
+    margin-bottom: 6rem;
+    align-items: start;
   }
   @media (max-width: 900px) {
     .project-layout { grid-template-columns: 1fr; gap: 3rem; }
   }
 
-  .project-body { display: flex; flex-direction: column; gap: 3rem; }
+  .project-body { display: flex; flex-direction: column; gap: 3.5rem; }
 
+  /* ── Bloque texto ── */
   .bloque-texto { color: rgba(28,25,22,0.65); }
   .bloque-texto :global(h2) {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 400; color: var(--fg);
-    margin-bottom: 1rem; margin-top: 0.5rem; line-height: 1.2;
+    font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 400;
+    color: var(--fg); margin-bottom: 1rem; line-height: 1.2;
   }
   .bloque-texto :global(h3) {
     font-size: 1.1rem; font-weight: 500;
-    color: rgba(28,25,22,0.85); margin-bottom: 0.6rem; margin-top: 0.25rem;
+    color: rgba(28,25,22,0.85); margin-bottom: 0.6rem;
   }
   .bloque-texto :global(p) { font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.25rem; }
   .bloque-texto :global(ul), .bloque-texto :global(ol) { list-style: none; padding: 0; margin-bottom: 1.25rem; }
@@ -129,13 +190,50 @@ const bloquesConHtml = bloques.map((b: any) => {
   .bloque-texto :global(li)::before { content: '—'; position: absolute; left: 0; color: var(--accent-sage, #6B7A68); }
   .bloque-texto :global(strong) { color: var(--fg); font-weight: 500; }
 
+  /* ── Bloque imagen ── */
   .bloque-imagen { margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
   .bloque-imagen img { width: 100%; display: block; }
   .bloque-imagen figcaption {
     font-size: 0.78rem; letter-spacing: 0.06em;
-    color: rgba(245,245,240,0.3); text-align: center;
+    color: rgba(28,25,22,0.35); text-align: center;
   }
 
+  /* ── Bloque columnas ── */
+  .bloque-columnas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .bloque-columnas--imagen-izq .col-imagen { order: -1; }
+
+  .col-texto { color: rgba(28,25,22,0.65); }
+  .col-texto :global(h2) {
+    font-family: 'Trocchi', Georgia, serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 400;
+    color: var(--fg); margin-bottom: 0.8rem; line-height: 1.2;
+  }
+  .col-texto :global(p) { font-size: 1rem; line-height: 1.8; margin-bottom: 1rem; }
+  .col-texto :global(li) {
+    font-size: 1rem; padding-left: 1.25rem;
+    position: relative; color: rgba(28,25,22,0.6); margin-bottom: 0.4rem;
+  }
+  .col-texto :global(li)::before { content: '—'; position: absolute; left: 0; color: var(--accent-sage, #6B7A68); }
+
+  .col-imagen { margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .col-imagen img { width: 100%; display: block; }
+  .col-imagen figcaption {
+    font-size: 0.75rem; letter-spacing: 0.06em;
+    color: rgba(28,25,22,0.35); text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .bloque-columnas { grid-template-columns: 1fr; gap: 2rem; }
+    .bloque-columnas--imagen-izq .col-imagen { order: 0; }
+  }
+
+  /* ── Sidebar ── */
   .project-sidebar { position: sticky; top: calc(72px + 2rem); }
   .sidebar-item {
     padding: 1.4rem 0; border-top: 1px solid rgba(28,25,22,0.1);
@@ -145,19 +243,7 @@ const bloquesConHtml = bloques.map((b: any) => {
   .sidebar-label { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-sage, #6B7A68); }
   .sidebar-value { font-size: 1rem; color: var(--fg-accent, #3D3530); }
 
-  .project-gallery {
-    display: grid; grid-template-columns: repeat(2,1fr);
-    gap: 1.5rem; margin-bottom: 6rem;
-  }
-  .project-gallery .gallery-item:first-child { grid-column: 1/-1; }
-  .gallery-item { overflow: hidden; background: var(--bg-card, #EEE9E2); margin: 0; }
-  .gallery-item img { width: 100%; display: block; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
-  .gallery-item:hover img { transform: scale(1.03); }
-  @media (max-width:640px) {
-    .project-gallery { grid-template-columns: 1fr; }
-    .project-gallery .gallery-item:first-child { grid-column: 1; }
-  }
-
+  /* ── Footer ── */
   .project-footer { padding-top: 3rem; border-top: 1px solid rgba(28,25,22,0.1); }
   .back-link {
     display: inline-flex; align-items: center; gap: 0.6rem;
@@ -166,17 +252,15 @@ const bloquesConHtml = bloques.map((b: any) => {
   }
   .back-link:hover { color: var(--accent-sage, #6B7A68); gap: 0.9rem; }
 
-  .reveal {
-    opacity: 0; transform: translateY(24px);
-    transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
-  }
+  /* ── Reveal ── */
+  .reveal { opacity: 0; transform: translateY(24px);
+    transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
 </style>
 
 <script>
+  // Reveal on scroll
   const io = new IntersectionObserver(
     (entries) => entries.forEach((e) => {
       if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
@@ -184,4 +268,15 @@ const bloquesConHtml = bloques.map((b: any) => {
     { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
   );
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // Parallax suave en el cover (JS para mayor control)
+  const parallaxEl = document.querySelector('.parallax-img') as HTMLElement | null;
+  if (parallaxEl) {
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const speed = 0.4;
+      parallaxEl.style.transform = `translateY(${scrollY * speed}px)`;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
 </script>
