@@ -4,7 +4,7 @@ import { getSiteConfig } from '../lib/storyblok';
 const PUBLIC_PATHS = ['/lock', '/api/unlock'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { pathname } = context.url;
+  const { pathname, searchParams } = context.url;
 
   // Permitir assets estáticos
   if (
@@ -12,6 +12,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
     pathname.startsWith('/api/') ||
     PUBLIC_PATHS.includes(pathname)
   ) {
+    return next();
+  }
+
+  // Permitir el iframe del editor visual de Storyblok
+  if (searchParams.has('_storyblok')) {
     return next();
   }
 
