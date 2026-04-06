@@ -486,36 +486,41 @@ const bloquesRender = bloques.map((b: any) => {
 </style>
 
 <script>
-  // Reveal individual on scroll — each bloque animates independently
-  const io = new IntersectionObserver(
-    (entries) => entries.forEach((e) => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    }),
-    { threshold: 0.06, rootMargin: '0px 0px -60px 0px' }
-  );
-  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  function initTrabajo() {
+    // Reveal individual on scroll — each bloque animates independently
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      }),
+      { threshold: 0.06, rootMargin: '0px 0px -60px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => {
+      el.classList.remove('visible');
+      io.observe(el);
+    });
 
-  // Parallax suave en el cover (solo si hay imagen, no video)
-  const parallaxEl = document.querySelector('.parallax-img') as HTMLElement | null;
-  if (parallaxEl) {
-    const coverEl = parallaxEl.closest('.project-cover-parallax') as HTMLElement | null;
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        if (!coverEl) { ticking = false; return; }
-        const rect = coverEl.getBoundingClientRect();
-        if (rect.bottom < 0 || rect.top > window.innerHeight) { ticking = false; return; }
-        const progress = -rect.top / window.innerHeight;
-        // Combine with Ken Burns: only add translateY, let CSS animation handle scale/xy
-        parallaxEl.style.setProperty('--py', `${progress * 80}px`);
-        ticking = false;
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // Parallax suave en el cover (solo si hay imagen, no video)
+    const parallaxEl = document.querySelector('.parallax-img') as HTMLElement | null;
+    if (parallaxEl) {
+      const coverEl = parallaxEl.closest('.project-cover-parallax') as HTMLElement | null;
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          if (!coverEl) { ticking = false; return; }
+          const rect = coverEl.getBoundingClientRect();
+          if (rect.bottom < 0 || rect.top > window.innerHeight) { ticking = false; return; }
+          const progress = -rect.top / window.innerHeight;
+          parallaxEl.style.setProperty('--py', `${progress * 80}px`);
+          ticking = false;
+        });
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
   }
+  document.addEventListener('astro:page-load', initTrabajo);
 </script>

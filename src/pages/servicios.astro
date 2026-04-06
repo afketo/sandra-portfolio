@@ -231,40 +231,41 @@ const iconPaths: Record<string, string> = {
 </style>
 
 <script>
-  // ── Reveal on scroll ──
-  const io = new IntersectionObserver(
-    (entries) => entries.forEach((e) => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    }),
-    { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
-  );
-  document.querySelectorAll('.service-card, .reveal-header').forEach((el) => io.observe(el));
-
-  // ── 3D Tilt en hover ──
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!prefersReduced) {
-    document.querySelectorAll<HTMLElement>('.service-card').forEach((card) => {
-      const icon = card.querySelector<HTMLElement>('.card-icon');
-      if (!icon) return;
-
-      // Cursor magnético solo sobre el icono — elegante, no SaaS-ish
-      icon.style.transition = 'transform 0.15s ease';
-
-      card.addEventListener('mousemove', (e: MouseEvent) => {
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 12;
-        const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 12;
-        icon.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        icon.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
-        icon.style.transform  = 'translate(0,0)';
-      });
+  function initServicios() {
+    // ── Reveal on scroll ──
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      }),
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+    document.querySelectorAll('.service-card, .reveal-header').forEach((el) => {
+      el.classList.remove('visible');
+      io.observe(el);
     });
+
+    // ── Cursor magnético en icono ──
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced) {
+      document.querySelectorAll<HTMLElement>('.service-card').forEach((card) => {
+        const icon = card.querySelector<HTMLElement>('.card-icon');
+        if (!icon) return;
+        icon.style.transition = 'transform 0.15s ease';
+        card.addEventListener('mousemove', (e: MouseEvent) => {
+          const rect = card.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 12;
+          const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 12;
+          icon.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          icon.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+          icon.style.transform  = 'translate(0,0)';
+        });
+      });
+    }
   }
+  document.addEventListener('astro:page-load', initServicios);
 </script>

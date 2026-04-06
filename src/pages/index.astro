@@ -261,11 +261,17 @@ const regular     = visibles.filter((t) => !t.content.featured);
 </style>
 
 <script>
-  const io = new IntersectionObserver(
-    (entries) => entries.forEach((e) => {
-      e.target.classList.toggle('visible', e.isIntersecting);
-    }),
-    { threshold: 0.08, rootMargin: '0px 0px -60px 0px' }
-  );
-  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  function initReveal() {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        e.target.classList.toggle('visible', e.isIntersecting);
+      }),
+      { threshold: 0.08, rootMargin: '0px 0px -60px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => {
+      el.classList.remove('visible');
+      io.observe(el);
+    });
+  }
+  document.addEventListener('astro:page-load', initReveal);
 </script>
