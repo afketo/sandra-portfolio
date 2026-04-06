@@ -68,6 +68,26 @@ export async function getSiteConfig(): Promise<Record<string, string>> {
   }
 }
 
+export async function getPageSobreMi(): Promise<Record<string, any>> {
+  const api = useStoryblokApi();
+  try {
+    const { data } = await api.get('cdn/stories/pages/sobre-mi', { version });
+    return data.story.content as Record<string, any>;
+  } catch {
+    return {};
+  }
+}
+
+export async function getPageContacto(): Promise<Record<string, any>> {
+  const api = useStoryblokApi();
+  try {
+    const { data } = await api.get('cdn/stories/pages/contacto', { version });
+    return data.story.content as Record<string, any>;
+  } catch {
+    return {};
+  }
+}
+
 export type StoryblokStory = {
   id: number;
   name: string;

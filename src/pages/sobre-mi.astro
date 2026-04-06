@@ -1,12 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getSiteConfig, renderRichText } from '../lib/storyblok';
+import { getPageSobreMi, getSiteConfig, renderRichText } from '../lib/storyblok';
 
+const page = await getPageSobreMi();
 const site = await getSiteConfig();
-const aboutIntro = renderRichText(site.aboutIntro) || '';
-const aboutBody  = renderRichText(site.aboutBody)  || '';
-const aboutImage = typeof site.aboutImage === 'object' ? (site.aboutImage as any)?.filename : (site.aboutImage || '');
-const linkedin   = site.linkedin || '';
+
+const aboutIntro = renderRichText(page.intro  || site.aboutIntro) || '';
+const aboutBody  = renderRichText(page.cuerpo || site.aboutBody)  || '';
+const aboutImage = (() => {
+  const img = page.imagen || site.aboutImage;
+  return typeof img === 'object' ? (img as any)?.filename : (img || '');
+})();
+const linkedin = site.linkedin || '';
 ---
 
 <Layout title="Sandra González — Sobre mí" fullbleed={true}>
@@ -31,8 +36,8 @@ const linkedin   = site.linkedin || '';
   <div class="about-body-section sg-inner">
     <div class="about-grid">
       <div class="about-text">
-        <div class="about-intro" set:html={aboutIntro} />
-        <div class="about-body" set:html={aboutBody} />
+        <div class="about-intro richtext" set:html={aboutIntro} />
+        <div class="about-body richtext" set:html={aboutBody} />
         <div class="about-links">
           <a href="/contacto" class="about-cta">Hablemos</a>
           {linkedin && (
@@ -106,10 +111,16 @@ const linkedin   = site.linkedin || '';
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
   @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; gap: 3rem; } }
 
-  .about-text { text-align: center; }
+  .about-text { text-align: left; }
   .about-intro { font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.6; color: var(--fg); margin-bottom: 1.5rem; }
   .about-body { font-size: 0.95rem; line-height: 1.7; color: var(--fg-muted); margin-bottom: 3rem; }
-  .about-links { display: flex; align-items: center; justify-content: center; gap: 2rem; }
+
+  .richtext :global(p) { margin-bottom: 1em; }
+  .richtext :global(strong) { font-weight: 600; }
+  .richtext :global(em) { font-style: italic; }
+  .richtext :global(a) { color: var(--accent, #8B7355); text-decoration: underline; text-underline-offset: 3px; }
+
+  .about-links { display: flex; align-items: center; gap: 2rem; }
   .about-cta {
     font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
     text-decoration: none; color: var(--btn-primary-text);
