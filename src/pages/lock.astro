@@ -1,5 +1,4 @@
 ---
-import LogoSG from '../components/LogoSG.astro';
 import '../styles/global.css';
 
 const hasError = Astro.url.searchParams.get('error') === '1';
@@ -12,119 +11,215 @@ const hasError = Astro.url.searchParams.get('error') === '1';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sandra González</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- Netlify Identity: procesa tokens de invitación y recuperación de contraseña -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Trocchi&display=swap" rel="stylesheet" />
   </head>
   <body class="lock-body">
+
+    <div class="lock-bg" aria-hidden="true">
+      <div class="lock-noise"></div>
+      <div class="lock-glow glow-1"></div>
+      <div class="lock-glow glow-2"></div>
+    </div>
+
     <div class="lock-container">
-      <div class="logo-wrapper">
-        <LogoSG />
+
+      <!-- Logo SG animado -->
+      <div class="logo-wrapper" aria-label="Sandra González">
+        <svg
+          width="64"
+          height="64"
+          viewBox="0 0 40 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+          class="lock-svg"
+        >
+          <path
+            class="sg-path sg-s"
+            d="M18 8C13 8 9 11 9 15C9 19 12 21 16 22C20 23 23 24.5 23 28C23 31.5 20 34 16 34C12 34 9 32 8 29"
+            stroke="#D4C9B0"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <path
+            class="sg-path sg-g"
+            d="M32 14C29 11 24 11 21 14C18 17 18 23 21 26C24 29 29 29 32 26V21H28"
+            stroke="#D4C9B0"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="lock-name">Sandra González</span>
       </div>
 
       <form method="POST" action="/api/unlock" class="lock-form">
-        <input
-          type="password"
-          name="code"
-          placeholder="·····"
-          autocomplete="off"
-          autofocus
-          class:list={['lock-input', hasError && 'lock-input--error']}
-        />
-        {hasError && <p class="lock-error">Código incorrecto</p>}
+        <div class="input-wrapper">
+          <input
+            type="password"
+            name="code"
+            placeholder="·  ·  ·  ·  ·"
+            autocomplete="off"
+            autofocus
+            class:list={['lock-input', hasError && 'lock-input--error']}
+          />
+          {hasError && (
+            <p class="lock-error">Código incorrecto</p>
+          )}
+        </div>
         <button type="submit" class="lock-submit">Entrar</button>
       </form>
-    </div>
 
-    <script>
-      // Si hay un token de invitación o recuperación en la URL,
-      // el widget de Netlify Identity lo detecta y abre el modal automáticamente.
-      // Una vez que Sandra establece su contraseña, la redirigimos al admin.
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('login', () => {
-          window.location.href = '/admin/';
-        });
-      }
-    </script>
+    </div>
   </body>
 </html>
 
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   .lock-body {
-    background: #111111;
+    background: #1A1714;
     min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Trocchi', Georgia, serif;
+    overflow: hidden;
+    position: relative;
   }
 
+  /* Fondo sutil */
+  .lock-bg {
+    position: fixed; inset: 0; pointer-events: none;
+  }
+  .lock-noise {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  .lock-glow {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+  }
+  .glow-1 {
+    width: 500px; height: 500px;
+    top: -120px; right: -100px;
+    background: radial-gradient(circle, rgba(139, 115, 85, 0.07) 0%, transparent 70%);
+  }
+  .glow-2 {
+    width: 400px; height: 400px;
+    bottom: -80px; left: -80px;
+    background: radial-gradient(circle, rgba(107, 99, 90, 0.06) 0%, transparent 70%);
+  }
+
+  /* Contenedor principal */
   .lock-container {
+    position: relative; z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
+    gap: 4rem;
   }
 
+  /* Logo */
   .logo-wrapper {
-    transform: scale(2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .lock-svg { display: block; }
+  .lock-name {
+    font-family: 'Trocchi', Georgia, serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #7A736A;
   }
 
+  /* Animación del trazo SVG */
+  .sg-path {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+    animation: draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .sg-s { animation-delay: 0.2s; }
+  .sg-g { animation-delay: 0.7s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  /* Formulario */
   .lock-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
+    animation: fadeUp 0.8s ease 1.2s both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .lock-input {
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(245, 245, 240, 0.2);
-    color: #F5F5F0;
+    border-bottom: 1px solid #3A3530;
+    color: #F5F0E8;
     font-family: 'Trocchi', Georgia, serif;
-    font-size: 1.5rem;
-    letter-spacing: 0.5rem;
+    font-size: 1.4rem;
+    letter-spacing: 0.6rem;
     text-align: center;
-    padding: 0.5rem 1rem;
-    width: 14rem;
+    padding: 0.5rem 0.5rem 0.75rem;
+    width: 16rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.25s ease;
+    caret-color: #8B7355;
   }
-
   .lock-input:focus {
-    border-bottom-color: rgba(245, 245, 240, 0.8);
+    border-bottom-color: #8B7355;
   }
-
   .lock-input--error {
-    border-bottom-color: rgba(255, 100, 100, 0.6);
+    border-bottom-color: rgba(200, 80, 80, 0.5);
   }
-
   .lock-input::placeholder {
-    color: rgba(245, 245, 240, 0.2);
+    color: #3A3530;
     letter-spacing: 0.5rem;
   }
 
   .lock-error {
-    font-size: 0.75rem;
-    color: rgba(255, 100, 100, 0.8);
-    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: rgba(200, 100, 100, 0.75);
+    text-transform: uppercase;
   }
 
   .lock-submit {
     background: transparent;
-    border: 1px solid rgba(245, 245, 240, 0.15);
-    color: rgba(245, 245, 240, 0.45);
+    border: 1px solid #3A3530;
+    color: #7A736A;
     font-family: 'Trocchi', Georgia, serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    padding: 0.6rem 2rem;
+    padding: 0.65rem 2.5rem;
     cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 0.5rem;
+    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
   }
-
   .lock-submit:hover {
-    border-color: rgba(245, 245, 240, 0.5);
-    color: #F5F5F0;
+    border-color: #8B7355;
+    color: #D4C9B0;
+    background: rgba(139, 115, 85, 0.08);
+  }
+  .lock-submit:active {
+    background: rgba(139, 115, 85, 0.15);
   }
 </style>
