@@ -1,4 +1,19 @@
 import { useStoryblokApi } from '@storyblok/astro';
+import { richTextResolver } from '@storyblok/richtext';
+
+const resolver = richTextResolver();
+
+/** Convierte un campo richtext de Storyblok a HTML string */
+export function renderRichText(content: unknown): string {
+  if (!content) return '';
+  // Si ya es string (campo texto plano), devuélvelo directo
+  if (typeof content === 'string') return content;
+  try {
+    return resolver.render(content as any);
+  } catch {
+    return '';
+  }
+}
 
 // Siempre usamos draft + preview token.
 // El sitio tiene su propia autenticación por contraseña.

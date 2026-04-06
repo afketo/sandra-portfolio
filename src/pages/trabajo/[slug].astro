@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getTrabajo } from '../../lib/storyblok';
-import { marked } from 'marked';
+import { getTrabajo, renderRichText } from '../../lib/storyblok';
 
 const { slug } = Astro.params;
 const story = await getTrabajo(slug!);
@@ -16,7 +15,7 @@ const coverUrl = typeof cover === 'object' ? cover.filename : cover;
 const bloquesRender = bloques.map((b: any) => {
   const type = b.component || b.type;
   if (type === 'bloque_texto') {
-    return { ...b, _type: 'texto', html: marked.parse(b.texto ?? '') };
+    return { ...b, _type: 'texto', html: renderRichText(b.texto) };
   }
   if (type === 'bloque_imagen') {
     const imgUrl = typeof b.imagen === 'object' ? b.imagen?.filename : b.imagen;
@@ -24,7 +23,7 @@ const bloquesRender = bloques.map((b: any) => {
   }
   if (type === 'bloque_columnas') {
     const imgUrl = typeof b.imagen === 'object' ? b.imagen?.filename : b.imagen;
-    return { ...b, _type: 'columnas', _imgUrl: imgUrl, html: marked.parse(b.texto ?? '') };
+    return { ...b, _type: 'columnas', _imgUrl: imgUrl, html: renderRichText(b.texto) };
   }
   return { ...b, _type: type };
 });
@@ -94,7 +93,7 @@ const bloquesRender = bloques.map((b: any) => {
 </Layout>
 
 <style>
-  .project { max-width: 76rem; margin: 0 auto; }
+  .project { max-width: 90rem; margin: 0 auto; }
 
   /* ── Cover Parallax ── */
   .project-cover-parallax {
@@ -158,10 +157,13 @@ const bloquesRender = bloques.map((b: any) => {
   /* ── Layout cuerpo ── */
   .project-layout {
     display: grid;
-    grid-template-columns: 1fr 17rem;
-    gap: 6rem;
+    grid-template-columns: 1fr 14rem;
+    gap: 5rem;
     margin-bottom: 6rem;
     align-items: start;
+  }
+  @media (max-width: 1024px) {
+    .project-layout { grid-template-columns: 1fr 12rem; gap: 3.5rem; }
   }
   @media (max-width: 900px) {
     .project-layout { grid-template-columns: 1fr; gap: 3rem; }

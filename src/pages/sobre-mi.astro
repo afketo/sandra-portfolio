@@ -1,12 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getSiteConfig } from '../lib/storyblok';
+import { getSiteConfig, renderRichText } from '../lib/storyblok';
 
 const site = await getSiteConfig();
-const aboutIntro = site.aboutIntro || '';
-const aboutBody  = site.aboutBody  || '';
-const aboutImage = site.aboutImage || '';
-const linkedin   = site.linkedin   || '';
+const aboutIntro = renderRichText(site.aboutIntro) || '';
+const aboutBody  = renderRichText(site.aboutBody)  || '';
+const aboutImage = typeof site.aboutImage === 'object' ? (site.aboutImage as any)?.filename : (site.aboutImage || '');
+const linkedin   = site.linkedin || '';
 ---
 
 <Layout title="Sandra González — Sobre mí" fullbleed={true}>
@@ -31,8 +31,8 @@ const linkedin   = site.linkedin   || '';
   <div class="about-body-section sg-inner">
     <div class="about-grid">
       <div class="about-text">
-        <p class="about-intro">{aboutIntro}</p>
-        <p class="about-body">{aboutBody}</p>
+        <div class="about-intro" set:html={aboutIntro} />
+        <div class="about-body" set:html={aboutBody} />
         <div class="about-links">
           <a href="/contacto" class="about-cta">Hablemos</a>
           {linkedin && (

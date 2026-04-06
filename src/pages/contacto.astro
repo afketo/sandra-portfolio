@@ -1,19 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getSiteConfig } from '../lib/storyblok';
+import { getSiteConfig, renderRichText } from '../lib/storyblok';
 
 const site = await getSiteConfig();
 const email        = site.email        || '';
 const instagram    = site.instagram    || '';
 const linkedin     = site.linkedin     || '';
 const behance      = site.behance      || '';
-const contactIntro = site.contactIntro || '¿Tienes un proyecto en mente? Cuéntame.';
+const contactIntro = renderRichText(site.contactIntro) || '<p>¿Tienes un proyecto en mente? Cuéntame.</p>';
 ---
 
 <Layout title="Sandra González — Contacto">
   <div class="contact-wrapper">
     <h1>Contacto</h1>
-    <p class="contact-intro">{contactIntro}</p>
+    <div class="contact-intro" set:html={contactIntro} />
 
     {email && (
       <a href={`mailto:${email}`} class="contact-email">{email}</a>

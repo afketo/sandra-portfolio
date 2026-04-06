@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getTrabajos, getSiteConfig } from '../lib/storyblok';
+import { getTrabajos, getSiteConfig, renderRichText } from '../lib/storyblok';
 
 const sessionCookie = Astro.cookies.get('sg_session');
 
@@ -20,7 +20,7 @@ const siteConfig = await getSiteConfig();
 const heroLine1   = siteConfig.heroLine1   || 'Hola! soy';
 const heroLine2   = siteConfig.heroLine2   || 'Sandra González';
 const heroLine3   = siteConfig.heroLine3   || 'product designer';
-const heroLine4   = siteConfig.heroLine4   || '';
+const heroLine4   = renderRichText(siteConfig.heroLine4) || '';
 const heroBgImage = siteConfig.heroBgImage || '';
 
 const allTrabajos = await getTrabajos();
@@ -38,7 +38,7 @@ const regular     = visibles.filter((t) => !t.content.featured);
         <p class="hero-line hero-line--1">{heroLine1}</p>
         <p class="hero-line hero-line--2">{heroLine2}</p>
         <p class="hero-line hero-line--3">{heroLine3}</p>
-        <p class="hero-line hero-line--4" set:html={heroLine4.replace(/\n/g, '<br/>')}></p>
+        <div class="hero-line hero-line--4" set:html={heroLine4}></div>
       </div>
 
       <div class="hero-scroll">
