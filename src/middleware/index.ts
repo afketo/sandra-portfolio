@@ -3,11 +3,16 @@ import { getSiteConfig } from '../lib/storyblok';
 
 const PUBLIC_PATHS = ['/lock', '/api/unlock'];
 
-export const onRequest = defineMiddleware(async (context, next) => {
-  const { pathname, searchParams } = context.url;
-  const request = context.request;
+// Token secreto para el preview de Storyblok.
+// Configurado en Vercel como STORYBLOK_PREVIEW_SECRET.
+// La URL de preview en Storyblok debe ser:
+//   https://sandra-portfolio-one.vercel.app/preview/[TOKEN]/{0}
+const PREVIEW_SECRET = process.env.STORYBLOK_PREVIEW_SECRET || 'sb-preview-2024';
 
-  // Permitir assets estáticos
+export const onRequest = defineMiddleware(async (context, next) => {
+  const { pathname } = context.url;
+
+  // Assets estáticos y rutas públicas — sin auth
   if (
     pathname.startsWith('/_astro') ||
     pathname.startsWith('/api/') ||
@@ -16,15 +21,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  // Permitir el editor visual de Storyblok:
-  // Storyblok añade _storyblok al abrir en el iframe, y el Referer es app.storyblok.com
-  const referer = request.headers.get('referer') || '';
-  const isStoryblokEditor =
-    searchParams.has('_storyblok') ||
-    referer.includes('app.storyblok.com');
+  // Preview de Storyblok: /preview/[token]/[...ruta]
+  // El token va en el path → no choca con real_path ni con _storyblok params
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments[0] === 'preview' && segments[1] === PREVIEW_SECRET) {
+    // Reescribir la URL internamente hacia la ruta real
+    const realPath = '/' + segments.slice(2).join('/');
+    context.url.pathname = realPath || '/';
 
-  if (isStoryblokEditor) {
-    return next();
+    // Evitar indexación de estas URLs de preview
+    const response = await next();
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    response.headers.set('Cache-Control', 'no-store');
+    return response;
   }
 
   // Verificar cookie de sesión
