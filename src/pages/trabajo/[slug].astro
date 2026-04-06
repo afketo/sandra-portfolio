@@ -139,7 +139,7 @@ const bloquesRender = bloques.map((b: any) => {
     transform: translateX(-50%);
     height: 100dvh;
     overflow: hidden;
-    margin-bottom: 7rem;
+    margin-bottom: 0;
   }
 
   .parallax-img {
@@ -192,65 +192,63 @@ const bloquesRender = bloques.map((b: any) => {
 
   /* ── Sección intro fullwidth ── */
   .project-intro {
+    /* Breakout real: escapa de sg-inner (max-width 1100px) y cubre todo el viewport */
+    position: relative;
     width: 100vw;
     left: 50%;
-    position: relative;
     transform: translateX(-50%);
-    margin-bottom: 6rem;
+    margin-bottom: 0;
   }
 
   .intro-inner {
-    max-width: 90rem;
-    margin: 0 auto;
-    padding: 5rem max(2rem, calc((100vw - 90rem) / 2));
+    /* Padding horizontal alineado con el resto del sitio */
+    padding: 5rem max(2.5rem, calc((100vw - 1400px) / 2));
     display: grid;
-    grid-template-columns: 1fr 22rem;
-    gap: 5rem;
+    grid-template-columns: 1fr 280px;
+    gap: 6rem;
     align-items: start;
   }
 
   /* Texto claro sobre fondo oscuro */
   .project-intro--light .intro-texto,
-  .project-intro--light .meta-value {
-    color: #F5F0E8;
-  }
+  .project-intro--light .meta-value { color: #F5F0E8; }
   .project-intro--light .meta-label { color: #D4C9B0; }
   .project-intro--light .meta-item  { border-top-color: rgba(245,240,232,0.15); }
+  .project-intro--light .meta-item:last-child { border-bottom-color: rgba(245,240,232,0.15); }
 
   /* Texto oscuro sobre fondo claro */
   .project-intro--dark .intro-texto,
-  .project-intro--dark .meta-value {
-    color: #1C1916;
-  }
+  .project-intro--dark .meta-value { color: #1C1916; }
   .project-intro--dark .meta-label { color: #8B7355; }
   .project-intro--dark .meta-item  { border-top-color: rgba(28,25,22,0.12); }
+  .project-intro--dark .meta-item:last-child { border-bottom-color: rgba(28,25,22,0.12); }
 
   /* Metadatos derecha */
-  .intro-meta { padding-top: 0.25rem; }
+  .intro-meta { padding-top: 0.5rem; }
   .meta-item {
-    padding: 1.2rem 0;
+    padding: 1.1rem 0;
     border-top: 1px solid;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.3rem;
   }
   .meta-item:last-child { border-bottom: 1px solid; }
   .meta-label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
   }
   .meta-value {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.3;
   }
 
   @media (max-width: 900px) {
     .intro-inner {
       grid-template-columns: 1fr;
-      gap: 3rem;
-      padding: 3.5rem 1.25rem;
+      gap: 2.5rem;
+      padding: 3rem 1.5rem;
     }
   }
 
@@ -259,6 +257,7 @@ const bloquesRender = bloques.map((b: any) => {
     display: flex;
     flex-direction: column;
     gap: 3.5rem;
+    margin-top: 6rem;
     margin-bottom: 6rem;
   }
 
