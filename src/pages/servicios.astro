@@ -1,65 +1,269 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import IconoServicio from '../components/IconoServicio.astro';
 import { getServicios } from '../lib/storyblok';
 
 const servicios = await getServicios();
+
+// SVG paths para cada icono (stroke, sin fill, viewBox 0 0 24 24)
+const iconPaths: Record<string, string> = {
+  search:     'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0 0 4 4',
+  layers:     'M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
+  cursor:     'M5 3l14 9-7 1-3 7L5 3z',
+  palette:    'M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10c0 2.21-1.343 3-3 3s-3-.79-3-3M8 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-4-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z',
+  components: 'M5 3h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm10 0h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM5 13h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2zm10 3a4 4 0 1 0 8 0 4 4 0 0 0-8 0z',
+  target:     'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zm0-6a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
+};
 ---
 
 <Layout title="Sandra González — Servicios">
-  <div class="services-header">
-    <h1>Servicios</h1>
-  </div>
 
-  <ul class="services-list">
-    {servicios.map((servicio) => (
-      <li class="service-item">
-        <div class="service-icon">
-          <IconoServicio nombre={servicio.content.icono} />
-        </div>
-        <div class="service-content">
-          <h2 class="service-title">{servicio.content.title}</h2>
-          <p class="service-desc">{servicio.content.descripcion}</p>
-        </div>
-      </li>
-    ))}
-  </ul>
+  <section class="services-section">
+
+    <header class="services-header reveal-header">
+      <p class="services-eyebrow">Servicios</p>
+      <h1 class="services-title">Lo que puedo<br/>hacer por ti</h1>
+    </header>
+
+    <ul class="services-grid" role="list">
+      {servicios.map((s, i) => {
+        const num = String(i + 1).padStart(2, '0');
+        const path = iconPaths[s.content.icono] ?? iconPaths.target;
+        return (
+          <li class="service-card" style={`--i: ${i}`} data-index={i}>
+            <div class="card-inner">
+
+              {/* Número decorativo de fondo */}
+              <span class="card-num" aria-hidden="true">{num}</span>
+
+              {/* Icono SVG animado */}
+              <div class="card-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="service-svg"
+                  width="32" height="32"
+                >
+                  <path class="svg-path" d={path} />
+                </svg>
+              </div>
+
+              {/* Contenido */}
+              <h2 class="card-title">{s.content.title}</h2>
+              <p class="card-desc">{s.content.descripcion}</p>
+
+              {/* Línea accent animada */}
+              <div class="card-line" aria-hidden="true"></div>
+
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+
+  </section>
+
 </Layout>
 
 <style>
-  .services-header { margin-bottom: 5rem; }
-  .services-header h1 {
+  /* ── Sección ── */
+  .services-section {
+    padding-top: 4rem;
+    padding-bottom: 8rem;
+  }
+
+  /* ── Header ── */
+  .services-header {
+    margin-bottom: 5rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .services-header.visible { opacity: 1; transform: translateY(0); }
+
+  .services-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent, #8B7355);
+    margin-bottom: 1rem;
+  }
+  .services-title {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(3rem, 8vw, 6rem); font-weight: 400;
-    line-height: 1; color: #F5F5F0;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--fg, #1C1916);
+    letter-spacing: -0.02em;
   }
 
-  .services-list { list-style: none; display: flex; flex-direction: column; }
-
-  .service-item {
-    display: grid; grid-template-columns: 3rem 1fr;
-    gap: 2rem; align-items: start;
-    padding: 2.5rem 0;
-    border-top: 1px solid rgba(245, 245, 240, 0.1);
-    transition: opacity 0.2s;
+  /* ── Grid 3×2 ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    list-style: none;
+    border-top: 1px solid rgba(28,25,22,0.1);
+    border-left: 1px solid rgba(28,25,22,0.1);
   }
-  .service-item:last-child { border-bottom: 1px solid rgba(245, 245, 240, 0.1); }
-  .service-item:hover { opacity: 0.75; }
 
-  .service-icon { color: rgba(245, 245, 240, 0.5); padding-top: 0.25rem; }
+  @media (max-width: 900px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 580px) {
+    .services-grid { grid-template-columns: 1fr; }
+  }
 
-  .service-title {
+  /* ── Card ── */
+  .service-card {
+    border-right: 1px solid rgba(28,25,22,0.1);
+    border-bottom: 1px solid rgba(28,25,22,0.1);
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity 0.75s cubic-bezier(0.22,1,0.36,1),
+      transform 0.75s cubic-bezier(0.22,1,0.36,1);
+    transition-delay: calc(var(--i, 0) * 0.09s);
+    will-change: transform, opacity;
+  }
+  .service-card.visible { opacity: 1; transform: translateY(0); }
+
+  .card-inner {
+    position: relative;
+    padding: 2.5rem 2rem 2.5rem;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: background 0.4s ease;
+    transform-style: preserve-3d;
+    transform: perspective(800px) rotateX(0deg) rotateY(0deg);
+    will-change: transform;
+  }
+  .service-card:hover .card-inner {
+    background: rgba(139,115,85,0.04);
+  }
+
+  /* Número decorativo grande */
+  .card-num {
+    position: absolute;
+    top: -0.6rem;
+    right: 1rem;
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 400;
-    margin-bottom: 0.75rem; color: #F5F5F0;
+    font-size: 6rem;
+    font-weight: 400;
+    color: rgba(28,25,22,0.04);
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.4s ease, transform 0.4s ease;
+    user-select: none;
+  }
+  .service-card:hover .card-num {
+    color: rgba(139,115,85,0.1);
+    transform: scale(1.05) translateX(-4px);
   }
 
-  .service-desc {
-    font-size: 0.9rem; line-height: 1.6;
-    color: rgba(245, 245, 240, 0.5); max-width: 48ch;
+  /* Icono SVG */
+  .card-icon {
+    margin-bottom: 1.5rem;
+    color: var(--accent, #8B7355);
+    display: flex;
   }
 
-  @media (max-width: 640px) {
-    .service-item { grid-template-columns: 1fr; gap: 1rem; }
+  /* Animación stroke-dasharray: se dibuja al hacerse visible */
+  .svg-path {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+    transition: stroke-dashoffset 0s; /* se activa al recibir clase */
+  }
+  .service-card.visible .svg-path {
+    animation: drawPath 1s cubic-bezier(0.4,0,0.2,1) forwards;
+    animation-delay: calc(var(--i, 0) * 0.09s + 0.4s);
+  }
+  @keyframes drawPath {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Título */
+  .card-title {
+    font-family: 'Trocchi', Georgia, serif;
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    font-weight: 400;
+    color: var(--fg, #1C1916);
+    line-height: 1.2;
+    margin-bottom: 0.85rem;
+    transition: color 0.3s ease;
+  }
+  .service-card:hover .card-title { color: var(--accent, #8B7355); }
+
+  /* Descripción */
+  .card-desc {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: rgba(28,25,22,0.55);
+    flex: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Línea accent que se expande al hover */
+  .card-line {
+    height: 1px;
+    background: var(--accent, #8B7355);
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    margin-top: auto;
+  }
+  .service-card:hover .card-line { width: 100%; }
+
+  /* ── Reducir movimiento ── */
+  @media (prefers-reduced-motion: reduce) {
+    .service-card, .services-header {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    .svg-path { stroke-dashoffset: 0 !important; animation: none !important; }
+    .card-inner { transition: background 0.2s ease !important; }
   }
 </style>
+
+<script>
+  // ── Reveal on scroll ──
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    }),
+    { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+  );
+  document.querySelectorAll('.service-card, .reveal-header').forEach((el) => io.observe(el));
+
+  // ── 3D Tilt en hover ──
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReduced) {
+    document.querySelectorAll<HTMLElement>('.service-card').forEach((card) => {
+      const inner = card.querySelector<HTMLElement>('.card-inner');
+      if (!inner) return;
+
+      card.addEventListener('mousemove', (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5 to 0.5
+        const y = (e.clientY - rect.top)  / rect.height - 0.5;
+        const tiltX = (-y * 8).toFixed(2);  // max 8deg
+        const tiltY = ( x * 8).toFixed(2);
+        inner.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(4px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        inner.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+      });
+    });
+  }
+</script>
