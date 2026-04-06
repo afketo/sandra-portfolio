@@ -22,6 +22,7 @@ const heroLine2   = siteConfig.heroLine2   || 'Sandra González';
 const heroLine3   = siteConfig.heroLine3   || 'product designer';
 const heroLine4   = renderRichText(siteConfig.heroLine4) || '';
 const heroBgImage = siteConfig.heroBgImage || '';
+const heroBgColor = siteConfig.heroBgColor || '';
 
 const allTrabajos = await getTrabajos();
 const visibles    = allTrabajos.filter((t) => !t.content.draft);
@@ -32,7 +33,7 @@ const regular     = visibles.filter((t) => !t.content.featured);
 <Layout title="Sandra González — Trabajos">
   <section class="works">
 
-    <div class="hero" style={heroBgImage ? `--hero-bg-image: url('${heroBgImage}')` : ''}>
+    <div class="hero" style={[heroBgImage ? `--hero-bg-image: url('${heroBgImage}')` : '', heroBgColor ? `--hero-bg-color: ${heroBgColor}` : ''].filter(Boolean).join(';')}>
       {heroBgImage && <div class="hero-bg-image" aria-hidden="true"></div>}
       <div class="hero-content">
         <p class="hero-line hero-line--1">{heroLine1}</p>
@@ -172,7 +173,7 @@ const regular     = visibles.filter((t) => !t.content.featured);
     align-items: center;
     justify-content: flex-start;
     overflow: hidden;
-    background: var(--bg);
+    background: var(--hero-bg-color, var(--bg));
     padding-left: max(2.5rem, calc((100vw - 1400px) / 2));
     padding-right: max(2.5rem, calc((100vw - 1400px) / 2));
     border-bottom: 1px solid var(--border);

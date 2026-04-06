@@ -5,10 +5,10 @@ import { getPageSobreMi, getSiteConfig, renderRichText } from '../lib/storyblok'
 const page = await getPageSobreMi();
 const site = await getSiteConfig();
 
-const aboutIntro = renderRichText(page.intro  || site.aboutIntro) || '';
-const aboutBody  = renderRichText(page.cuerpo || site.aboutBody)  || '';
+const aboutIntro = renderRichText(page.intro)  || '';
+const aboutBody  = renderRichText(page.cuerpo) || '';
 const aboutImage = (() => {
-  const img = page.imagen || site.aboutImage;
+  const img = page.imagen;
   return typeof img === 'object' ? (img as any)?.filename : (img || '');
 })();
 const linkedin = site.linkedin || '';

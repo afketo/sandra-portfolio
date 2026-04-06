@@ -5,9 +5,9 @@ import { getPageContacto, getSiteConfig, renderRichText } from '../lib/storyblok
 const page = await getPageContacto();
 const site = await getSiteConfig();
 
-const email        = page.email        || site.email        || '';
-const linkedin     = page.linkedin     || site.linkedin     || '';
-const contactIntro = renderRichText(page.intro || site.contactIntro) || '<p>¿Tienes un proyecto en mente? Cuéntame.</p>';
+const email        = page.email    || '';
+const linkedin     = page.linkedin || site.linkedin || '';
+const contactIntro = renderRichText(page.intro) || '<p>¿Tienes un proyecto en mente? Cuéntame.</p>';
 ---
 
 <Layout title="Sandra González — Contacto">
