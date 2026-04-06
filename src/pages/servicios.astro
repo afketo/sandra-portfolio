@@ -1,10 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import IconoServicio from '../components/IconoServicio.astro';
-import { getCollection } from 'astro:content';
+import { getServicios } from '../lib/storyblok';
 
-const servicios = (await getCollection('servicios'))
-  .sort((a, b) => a.data.order - b.data.order);
+const servicios = await getServicios();
 ---
 
 <Layout title="Sandra González — Servicios">
@@ -16,11 +15,11 @@ const servicios = (await getCollection('servicios'))
     {servicios.map((servicio) => (
       <li class="service-item">
         <div class="service-icon">
-          <IconoServicio nombre={servicio.data.icono} />
+          <IconoServicio nombre={servicio.content.icono} />
         </div>
         <div class="service-content">
-          <h2 class="service-title">{servicio.data.title}</h2>
-          <p class="service-desc">{servicio.data.descripcion}</p>
+          <h2 class="service-title">{servicio.content.title}</h2>
+          <p class="service-desc">{servicio.content.descripcion}</p>
         </div>
       </li>
     ))}
@@ -28,66 +27,39 @@ const servicios = (await getCollection('servicios'))
 </Layout>
 
 <style>
-  .services-header {
-    margin-bottom: 5rem;
-  }
-
+  .services-header { margin-bottom: 5rem; }
   .services-header h1 {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 400;
-    line-height: 1;
-    color: #F5F5F0;
+    font-size: clamp(3rem, 8vw, 6rem); font-weight: 400;
+    line-height: 1; color: #F5F5F0;
   }
 
-  .services-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-  }
+  .services-list { list-style: none; display: flex; flex-direction: column; }
 
   .service-item {
-    display: grid;
-    grid-template-columns: 3rem 1fr;
-    gap: 2rem;
-    align-items: start;
+    display: grid; grid-template-columns: 3rem 1fr;
+    gap: 2rem; align-items: start;
     padding: 2.5rem 0;
     border-top: 1px solid rgba(245, 245, 240, 0.1);
     transition: opacity 0.2s;
   }
+  .service-item:last-child { border-bottom: 1px solid rgba(245, 245, 240, 0.1); }
+  .service-item:hover { opacity: 0.75; }
 
-  .service-item:last-child {
-    border-bottom: 1px solid rgba(245, 245, 240, 0.1);
-  }
-
-  .service-item:hover {
-    opacity: 0.75;
-  }
-
-  .service-icon {
-    color: rgba(245, 245, 240, 0.5);
-    padding-top: 0.25rem;
-  }
+  .service-icon { color: rgba(245, 245, 240, 0.5); padding-top: 0.25rem; }
 
   .service-title {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 400;
-    margin-bottom: 0.75rem;
-    color: #F5F5F0;
+    font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 400;
+    margin-bottom: 0.75rem; color: #F5F5F0;
   }
 
   .service-desc {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: rgba(245, 245, 240, 0.5);
-    max-width: 48ch;
+    font-size: 0.9rem; line-height: 1.6;
+    color: rgba(245, 245, 240, 0.5); max-width: 48ch;
   }
 
   @media (max-width: 640px) {
-    .service-item {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
+    .service-item { grid-template-columns: 1fr; gap: 1rem; }
   }
 </style>

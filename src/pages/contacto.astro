@@ -1,96 +1,57 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { getSiteConfig } from '../lib/storyblok';
 
-let siteConfig = { email: '', instagram: '', linkedin: '', behance: '', contactIntro: '¿Tienes un proyecto en mente? Cuéntame.' };
-try {
-  const raw = readFileSync(join(process.cwd(), 'src/content/config/site.json'), 'utf-8');
-  siteConfig = { ...siteConfig, ...JSON.parse(raw) };
-} catch {}
+const site = await getSiteConfig();
+const email        = site.email        || '';
+const instagram    = site.instagram    || '';
+const linkedin     = site.linkedin     || '';
+const behance      = site.behance      || '';
+const contactIntro = site.contactIntro || '¿Tienes un proyecto en mente? Cuéntame.';
 ---
 
 <Layout title="Sandra González — Contacto">
   <div class="contact-wrapper">
     <h1>Contacto</h1>
-    <p class="contact-intro">{siteConfig.contactIntro}</p>
+    <p class="contact-intro">{contactIntro}</p>
 
-    <a href={`mailto:${siteConfig.email}`} class="contact-email">
-      {siteConfig.email}
-    </a>
+    {email && (
+      <a href={`mailto:${email}`} class="contact-email">{email}</a>
+    )}
 
     <div class="contact-socials">
-      {siteConfig.instagram && (
-        <a href={siteConfig.instagram} target="_blank" rel="noopener" class="social-link">
-          Instagram
-        </a>
+      {instagram && (
+        <a href={instagram} target="_blank" rel="noopener" class="social-link">Instagram</a>
       )}
-      {siteConfig.linkedin && (
-        <a href={siteConfig.linkedin} target="_blank" rel="noopener" class="social-link">
-          LinkedIn
-        </a>
+      {linkedin && (
+        <a href={linkedin} target="_blank" rel="noopener" class="social-link">LinkedIn</a>
       )}
-      {siteConfig.behance && (
-        <a href={siteConfig.behance} target="_blank" rel="noopener" class="social-link">
-          Behance
-        </a>
+      {behance && (
+        <a href={behance} target="_blank" rel="noopener" class="social-link">Behance</a>
       )}
     </div>
   </div>
 </Layout>
 
 <style>
-  .contact-wrapper {
-    max-width: 48rem;
-    padding-top: 4rem;
-  }
-
+  .contact-wrapper { max-width: 48rem; padding-top: 4rem; }
   h1 {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(3.5rem, 8vw, 7rem);
-    font-weight: 400;
-    line-height: 1;
-    color: var(--fg);
-    margin-bottom: 2rem;
+    font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 400;
+    line-height: 1; color: var(--fg); margin-bottom: 2rem;
   }
-
-  .contact-intro {
-    font-size: 1.1rem;
-    color: var(--fg-muted);
-    margin-bottom: 3rem;
-  }
-
+  .contact-intro { font-size: 1.1rem; color: var(--fg-muted); margin-bottom: 3rem; }
   .contact-email {
-    display: block;
-    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-    color: var(--fg);
-    text-decoration: none;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.5rem;
-    margin-bottom: 4rem;
-    transition: border-color 0.2s;
-    width: fit-content;
+    display: block; font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    color: var(--fg); text-decoration: none;
+    border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;
+    margin-bottom: 4rem; transition: border-color 0.2s; width: fit-content;
   }
-
-  .contact-email:hover {
-    border-color: var(--border-strong);
-  }
-
-  .contact-socials {
-    display: flex;
-    gap: 2.5rem;
-  }
-
+  .contact-email:hover { border-color: var(--border-strong); }
+  .contact-socials { display: flex; gap: 2.5rem; }
   .social-link {
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-secondary);
-    text-decoration: none;
-    transition: color 0.2s;
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--fg-secondary); text-decoration: none; transition: color 0.2s;
   }
-
-  .social-link:hover {
-    color: var(--fg);
-  }
+  .social-link:hover { color: var(--fg); }
 </style>

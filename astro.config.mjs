@@ -1,9 +1,16 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import netlify from '@astrojs/netlify';
+import vercel from '@astrojs/vercel';
+import { storyblok } from '@storyblok/astro';
+import { loadEnv } from 'vite';
 
-const isDev = process.env.NODE_ENV !== 'production';
+const env = loadEnv('', process.cwd(), 'STORYBLOK');
+
+const isProd = process.env.NODE_ENV === 'production';
+const storyblokToken = isProd
+  ? env.STORYBLOK_PUBLIC_TOKEN
+  : env.STORYBLOK_PREVIEW_TOKEN;
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,9 +18,21 @@ export default defineConfig({
 
   devToolbar: { enabled: false },
 
+  integrations: [
+    storyblok({
+      accessToken: storyblokToken,
+      bridge: !isProd,
+      apiOptions: {
+        region: 'eu',
+      },
+      components: {},
+      componentsDir: 'src',
+    }),
+  ],
+
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
   },
 
-  adapter: isDev ? undefined : netlify()
+  adapter: vercel(),
 });

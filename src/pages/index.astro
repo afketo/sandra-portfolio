@@ -1,66 +1,32 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
-function getSiteConfig() {
-  try {
-    return JSON.parse(readFileSync(join(process.cwd(), 'src/content/config/site.json'), 'utf-8'));
-  } catch { return {}; }
-}
-
-function getAccessCode() {
-  return getSiteConfig().accessCode || 'sandra2024';
-}
+import { getTrabajos, getSiteConfig } from '../lib/storyblok';
 
 const sessionCookie = Astro.cookies.get('sg_session');
-const isAuthenticated = sessionCookie?.value === getAccessCode();
 
-// Si no está autenticado, devolvemos una página mínima que:
-// - si hay token en el hash (invite/recovery) → deja que Netlify Identity lo procese
-// - si no hay token → redirige a /lock
+let accessCode = process.env.ACCESS_CODE || 'sandra2024';
+try {
+  const config = await getSiteConfig();
+  if (config.accessCode) accessCode = config.accessCode;
+} catch {}
+
+const isAuthenticated = sessionCookie?.value === accessCode;
+
 if (!isAuthenticated) {
-  return new Response(
-    `<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sandra González</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"><\/script>
-  <style>body{background:#111111;margin:0;min-height:100dvh;}</style>
-</head>
-<body>
-  <script>
-    var hash = window.location.hash;
-    var hasToken = hash.includes('invite_token') || hash.includes('recovery_token') || hash.includes('confirmation_token');
-    if (!hasToken) {
-      window.location.replace('/lock');
-    } else if (window.netlifyIdentity) {
-      window.netlifyIdentity.on('login', function() {
-        window.location.href = '/admin/';
-      });
-    }
-  <\/script>
-</body>
-</html>`,
-    { status: 200, headers: { 'content-type': 'text/html' } }
-  );
+  return Astro.redirect('/lock');
 }
 
-const allTrabajos = (await getCollection('trabajos', ({ data }) => !data.draft))
-  .sort((a, b) => a.data.order - b.data.order);
-
-const featured = allTrabajos.filter((t) => t.data.featured);
-const regular  = allTrabajos.filter((t) => !t.data.featured);
-
-const siteConfig = getSiteConfig();
-const heroLine1 = siteConfig.heroLine1 || 'Hola! soy';
-const heroLine2 = siteConfig.heroLine2 || 'Sandra González';
-const heroLine3 = siteConfig.heroLine3 || 'product designer';
-const heroLine4 = siteConfig.heroLine4 || 'Con más de 20 años de experiencia aportando actitud\na través de las ideas, la conceptualización\ny el cuidado del detalle.';
+const siteConfig = await getSiteConfig();
+const heroLine1   = siteConfig.heroLine1   || 'Hola! soy';
+const heroLine2   = siteConfig.heroLine2   || 'Sandra González';
+const heroLine3   = siteConfig.heroLine3   || 'product designer';
+const heroLine4   = siteConfig.heroLine4   || '';
 const heroBgImage = siteConfig.heroBgImage || '';
+
+const allTrabajos = await getTrabajos();
+const visibles    = allTrabajos.filter((t) => !t.content.draft);
+const featured    = visibles.filter((t) => t.content.featured);
+const regular     = visibles.filter((t) => !t.content.featured);
 ---
 
 <Layout title="Sandra González — Trabajos">
@@ -75,75 +41,6 @@ const heroBgImage = siteConfig.heroBgImage || '';
         <p class="hero-line hero-line--4" set:html={heroLine4.replace(/\n/g, '<br/>')}></p>
       </div>
 
-      <!-- SVG eliminado -->
-      <div class="hero-silhouette" aria-hidden="true" style="display:none">
-        <svg viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
-          <!-- Pelo largo detrás -->
-          <path d="M110 160 Q85 240 88 360 Q90 430 130 460 Q160 475 200 475 Q240 475 270 460 Q310 430 312 360 Q315 240 290 160 Q265 90 200 80 Q135 90 110 160Z" fill="#2E1A0A"/>
-          <!-- Cuello -->
-          <rect x="178" y="290" width="44" height="55" rx="14" fill="#C4956A"/>
-          <!-- Cara -->
-          <ellipse cx="200" cy="210" rx="88" ry="105" fill="#D4A574"/>
-          <!-- Mejillas rubor -->
-          <ellipse cx="138" cy="230" rx="22" ry="14" fill="#E8917A" opacity="0.35"/>
-          <ellipse cx="262" cy="230" rx="22" ry="14" fill="#E8917A" opacity="0.35"/>
-          <!-- Ceja izquierda -->
-          <path d="M148 162 Q168 154 188 158" stroke="#2E1A0A" stroke-width="4" stroke-linecap="round" fill="none"/>
-          <!-- Ceja derecha -->
-          <path d="M212 158 Q232 154 252 162" stroke="#2E1A0A" stroke-width="4" stroke-linecap="round" fill="none"/>
-          <!-- Ojo izquierdo — blanco -->
-          <ellipse cx="168" cy="192" rx="22" ry="18" fill="#F5EFE6"/>
-          <!-- Ojo izquierdo — iris -->
-          <ellipse cx="168" cy="194" rx="13" ry="13" fill="#5C3410"/>
-          <!-- Ojo izquierdo — pupila -->
-          <ellipse cx="168" cy="194" rx="7" ry="7" fill="#1A0A00"/>
-          <!-- Ojo izquierdo — brillo -->
-          <ellipse cx="173" cy="189" rx="4" ry="4" fill="#fff" opacity="0.75"/>
-          <!-- Párpado izquierdo -->
-          <path d="M146 185 Q168 174 190 185" stroke="#2E1A0A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <!-- Pestañas izq -->
-          <line x1="150" y1="183" x2="145" y2="177" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <line x1="160" y1="178" x2="157" y2="171" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <line x1="170" y1="176" x2="169" y2="169" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <line x1="180" y1="178" x2="181" y2="171" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <!-- Ojo derecho — blanco -->
-          <ellipse cx="232" cy="192" rx="22" ry="18" fill="#F5EFE6"/>
-          <!-- Ojo derecho — iris -->
-          <ellipse cx="232" cy="194" rx="13" ry="13" fill="#5C3410"/>
-          <!-- Ojo derecho — pupila -->
-          <ellipse cx="232" cy="194" rx="7" ry="7" fill="#1A0A00"/>
-          <!-- Ojo derecho — brillo -->
-          <ellipse cx="237" cy="189" rx="4" ry="4" fill="#fff" opacity="0.75"/>
-          <!-- Párpado derecho -->
-          <path d="M210 185 Q232 174 254 185" stroke="#2E1A0A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <!-- Pestañas der -->
-          <line x1="214" y1="183" x2="209" y2="177" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <line x1="224" y1="178" x2="221" y2="171" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <line x1="234" y1="176" x2="233" y2="169" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <line x1="244" y1="178" x2="245" y2="171" stroke="#2E1A0A" stroke-width="2" stroke-linecap="round"/>
-          <!-- Nariz pequeña -->
-          <path d="M196 220 Q200 238 204 220" stroke="#A0724A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M190 236 Q200 244 210 236" stroke="#A0724A" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- Boca sonrisa -->
-          <path d="M170 262 Q200 286 230 262" stroke="#7A3A20" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-          <!-- Labio superior -->
-          <path d="M172 261 Q186 255 200 260 Q214 255 228 261" stroke="#A0522D" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- Hoyuelos -->
-          <ellipse cx="158" cy="264" rx="5" ry="4" fill="#C07A50" opacity="0.4"/>
-          <ellipse cx="242" cy="264" rx="5" ry="4" fill="#C07A50" opacity="0.4"/>
-          <!-- Pelo flequillo -->
-          <path d="M112 168 Q118 130 140 118 Q160 108 200 105 Q240 108 260 118 Q282 130 288 168 Q270 145 248 140 Q224 134 200 133 Q176 134 152 140 Q130 145 112 168Z" fill="#2E1A0A"/>
-          <!-- Mechones flequillo -->
-          <path d="M130 158 Q122 138 132 125" stroke="#3D2810" stroke-width="8" fill="none" stroke-linecap="round"/>
-          <path d="M155 138 Q150 118 158 108" stroke="#3D2810" stroke-width="9" fill="none" stroke-linecap="round"/>
-          <path d="M200 133 Q200 110 202 100" stroke="#3D2810" stroke-width="10" fill="none" stroke-linecap="round"/>
-          <!-- Hombros -->
-          <path d="M112 460 Q72 470 55 510 L345 510 Q328 470 288 460 Q244 448 200 448 Q156 448 112 460Z" fill="#5C3D22"/>
-          <!-- Escote camisa -->
-          <path d="M166 460 Q200 490 234 460" stroke="#4A2E16" stroke-width="2" fill="none"/>
-        </svg>
-      </div>
-
       <div class="hero-scroll">
         <svg class="hero-arrow" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 5v14M5 13l7 7 7-7" stroke="#0F0D0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -152,17 +49,21 @@ const heroBgImage = siteConfig.heroBgImage || '';
     </div>
 
     {featured.map((t, i) => (
-      <a href={`/trabajo/${t.id}`} class="work-jumbo reveal" style={`--i: ${i}`}>
+      <a href={`/trabajo/${t.slug}`} class="work-jumbo reveal" style={`--i: ${i}`}>
         <div class="jumbo-image">
-          <img src={t.data.cover} alt={t.data.title} loading="eager" />
+          <img
+            src={typeof t.content.cover === 'object' ? t.content.cover.filename : t.content.cover}
+            alt={t.content.title}
+            loading="eager"
+          />
           <div class="jumbo-overlay">
-            <span class="work-year">{t.data.year}</span>
+            <span class="work-year">{t.content.year}</span>
             <span class="jumbo-cta">Ver proyecto →</span>
           </div>
         </div>
         <div class="jumbo-info">
-          <span class="work-category">{t.data.categoria}</span>
-          <h2 class="jumbo-title">{t.data.title}</h2>
+          <span class="work-category">{t.content.categoria}</span>
+          <h2 class="jumbo-title">{t.content.title}</h2>
         </div>
       </a>
     ))}
@@ -170,17 +71,21 @@ const heroBgImage = siteConfig.heroBgImage || '';
     {regular.length > 0 && (
       <div class="works-grid">
         {regular.map((t, i) => (
-          <a href={`/trabajo/${t.id}`} class="work-card reveal" style={`--i: ${i + featured.length}`}>
+          <a href={`/trabajo/${t.slug}`} class="work-card reveal" style={`--i: ${i + featured.length}`}>
             <div class="work-image-wrapper">
-              <img src={t.data.cover} alt={t.data.title} loading="lazy" />
+              <img
+                src={typeof t.content.cover === 'object' ? t.content.cover.filename : t.content.cover}
+                alt={t.content.title}
+                loading="lazy"
+              />
               <div class="work-overlay">
-                <span class="work-year">{t.data.year}</span>
+                <span class="work-year">{t.content.year}</span>
                 <span class="work-cta">Ver proyecto →</span>
               </div>
             </div>
             <div class="work-info">
-              <span class="work-category">{t.data.categoria}</span>
-              <h2 class="work-title">{t.data.title}</h2>
+              <span class="work-category">{t.content.categoria}</span>
+              <h2 class="work-title">{t.content.title}</h2>
             </div>
           </a>
         ))}
@@ -192,12 +97,6 @@ const heroBgImage = siteConfig.heroBgImage || '';
 
 <style>
   .works { display: flex; flex-direction: column; gap: 5rem; }
-
-  .section-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0;
-  }
 
   .work-jumbo { display: block; text-decoration: none; color: inherit; }
 
@@ -263,7 +162,6 @@ const heroBgImage = siteConfig.heroBgImage || '';
   /* ── Hero fullscreen ── */
   .hero {
     position: relative;
-    /* Breakout full-width */
     width: 100vw;
     left: 50%;
     transform: translateX(-50%);
@@ -275,7 +173,6 @@ const heroBgImage = siteConfig.heroBgImage || '';
     justify-content: flex-start;
     overflow: hidden;
     background: var(--bg);
-    /* Padding izquierdo alineado con sg-inner (max-width 1100px centrado) */
     padding-left: max(2rem, calc((100vw - 1100px) / 2));
     padding-right: max(2rem, calc((100vw - 1100px) / 2));
     border-bottom: 1px solid var(--border);
@@ -286,118 +183,63 @@ const heroBgImage = siteConfig.heroBgImage || '';
   }
 
   .hero-content {
-    position: relative;
-    z-index: 1;
-    text-align: left;
-    max-width: 44rem;
-    width: 100%;
+    position: relative; z-index: 1;
+    text-align: left; max-width: 44rem; width: 100%;
   }
 
   .hero-bg-image {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
+    background-color: #888ABA;
     background-image: var(--hero-bg-image);
-    background-size: cover;
+    background-size: auto 100%;
     background-position: right center;
+    background-repeat: no-repeat;
     z-index: 0;
   }
 
   .hero-bg-image::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: rgba(247, 244, 238, 0.55);
-  }
-
-  .hero-silhouette {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    height: 92%;
-    z-index: 0;
-    opacity: 0.55;
-    pointer-events: none;
-  }
-
-  .hero-silhouette svg {
-    height: 100%;
-    width: auto;
-  }
-
-  @media (max-width: 768px) {
-    .hero-silhouette { height: 65%; opacity: 0.35; }
   }
 
   .hero-line {
     display: block;
     font-family: 'Trocchi', Georgia, serif;
-    font-weight: 400;
-    color: var(--heading-h1);
-    opacity: 0;
-    transform: translateY(20px);
+    font-weight: 400; color: var(--heading-h1);
+    opacity: 0; transform: translateY(20px);
     animation: heroFadeUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-
   .hero-line--1 {
-    font-size: clamp(1.2rem, 2vw, 1.6rem);
-    line-height: 1.2;
-    letter-spacing: 0.01em;
-    margin-bottom: 0.4rem;
-    color: var(--fg-secondary);
-    animation-delay: 0.2s;
+    font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.2;
+    letter-spacing: 0.01em; margin-bottom: 0.4rem;
+    color: var(--fg-secondary); animation-delay: 0.2s;
   }
-
   .hero-line--2 {
-    font-size: clamp(3.5rem, 8vw, 7rem);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    margin-bottom: 0.5rem;
-    color: var(--heading-h1);
-    animation-delay: 0.4s;
+    font-size: clamp(3.5rem, 8vw, 7rem); line-height: 1;
+    letter-spacing: -0.03em; margin-bottom: 0.5rem;
+    color: var(--heading-h1); animation-delay: 0.4s;
   }
-
   .hero-line--3 {
-    font-size: clamp(1.4rem, 3vw, 2.4rem);
-    line-height: 1.2;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 2.5rem;
-    animation-delay: 0.6s;
+    font-size: clamp(1.4rem, 3vw, 2.4rem); line-height: 1.2;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 2.5rem; animation-delay: 0.6s;
   }
-
   .hero-line--4 {
     font-size: clamp(0.9rem, 1.4vw, 1.1rem);
-    font-family: 'Trocchi', Georgia, serif;
-    font-weight: 400;
-    line-height: 1.9;
-    color: var(--fg-muted);
-    letter-spacing: 0.01em;
-    animation-delay: 0.8s;
+    font-family: 'Trocchi', Georgia, serif; font-weight: 400;
+    line-height: 1.9; color: var(--fg-muted);
+    letter-spacing: 0.01em; animation-delay: 0.8s;
   }
-
-  @keyframes heroFadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes heroFadeUp { to { opacity: 1; transform: translateY(0); } }
 
   .hero-scroll {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 50%;
+    position: absolute; bottom: 2.5rem; left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.6rem;
-    z-index: 1;
-    opacity: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    z-index: 1; opacity: 0;
     animation: heroFadeUp 1s cubic-bezier(0.4,0,0.2,1) 1.2s forwards;
   }
-
-  .hero-arrow {
-    animation: arrowBounce 2s ease-in-out infinite;
-  }
-
+  .hero-arrow { animation: arrowBounce 2s ease-in-out infinite; }
   @keyframes arrowBounce {
     0%, 100% { transform: translateY(0); opacity: 0.45; }
     50%       { transform: translateY(6px); opacity: 0.8; }
@@ -408,8 +250,7 @@ const heroBgImage = siteConfig.heroBgImage || '';
   .work-cta      { font-size: 0.75rem; letter-spacing: 0.1em; color: var(--overlay-meta); }
 
   .reveal {
-    opacity: 0;
-    transform: translateY(-48px);
+    opacity: 0; transform: translateY(-48px);
     transition:
       opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
@@ -419,7 +260,6 @@ const heroBgImage = siteConfig.heroBgImage || '';
 </style>
 
 <script>
-  // ── 1. Reveal bidireccional: cae del cielo al entrar, desaparece al salir ──
   const io = new IntersectionObserver(
     (entries) => entries.forEach((e) => {
       e.target.classList.toggle('visible', e.isIntersecting);
@@ -427,5 +267,4 @@ const heroBgImage = siteConfig.heroBgImage || '';
     { threshold: 0.08, rootMargin: '0px 0px -60px 0px' }
   );
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
-
 </script>

@@ -1,20 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { getSiteConfig } from '../lib/storyblok';
 
-let site = { aboutIntro: '', aboutBody: '', aboutImage: '/images/sandra-gonzalez.jpg', linkedin: '' };
-try {
-  const raw = readFileSync(join(process.cwd(), 'src/content/config/site.json'), 'utf-8');
-  site = { ...site, ...JSON.parse(raw) };
-} catch {}
+const site = await getSiteConfig();
+const aboutIntro = site.aboutIntro || '';
+const aboutBody  = site.aboutBody  || '';
+const aboutImage = site.aboutImage || '';
+const linkedin   = site.linkedin   || '';
 ---
 
 <Layout title="Sandra González — Sobre mí" fullbleed={true}>
-  <!-- Jumbo hero con fondo dinámico -->
   <div class="about-hero">
     <div class="hero-canvas" aria-hidden="true">
-      <!-- Formas flotantes tipo UI/UX -->
       <div class="shape shape-circle"></div>
       <div class="shape shape-ring"></div>
       <div class="shape shape-bar bar-1"></div>
@@ -31,29 +28,22 @@ try {
     </div>
   </div>
 
-  <!-- Contenido -->
   <div class="about-body-section sg-inner">
     <div class="about-grid">
       <div class="about-text">
-        <p class="about-intro">{site.aboutIntro}</p>
-        <p class="about-body">{site.aboutBody}</p>
+        <p class="about-intro">{aboutIntro}</p>
+        <p class="about-body">{aboutBody}</p>
         <div class="about-links">
           <a href="/contacto" class="about-cta">Hablemos</a>
-          {site.linkedin && (
-            <a href={site.linkedin} target="_blank" rel="noopener" class="about-link">
-              LinkedIn →
-            </a>
+          {linkedin && (
+            <a href={linkedin} target="_blank" rel="noopener" class="about-link">LinkedIn →</a>
           )}
         </div>
       </div>
 
       <div class="about-image-wrapper">
-        {site.aboutImage && (
-          <img
-            src={site.aboutImage}
-            alt="Sandra González"
-            class="about-image"
-          />
+        {aboutImage && (
+          <img src={aboutImage} alt="Sandra González" class="about-image" />
         )}
       </div>
     </div>
@@ -61,269 +51,74 @@ try {
 </Layout>
 
 <style>
-  /* ── HERO JUMBO ── */
   .about-hero {
-    position: relative;
-    width: 100%;
-    height: 42vh;
-    min-height: 280px;
-    max-height: 440px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative; width: 100%; height: 42vh;
+    min-height: 280px; max-height: 440px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
     background: var(--hero-bg);
   }
-
-  /* Canvas de formas animadas */
-  .hero-canvas {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-  }
-
-  .shape {
-    position: absolute;
-    border-radius: 4px;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-  }
-
-  /* Círculo grande decorativo */
+  .hero-canvas { position: absolute; inset: 0; overflow: hidden; }
+  .shape { position: absolute; border-radius: 4px; opacity: 0; animation: fadeIn 1s ease forwards; }
   .shape-circle {
-    width: 260px;
-    height: 260px;
-    border-radius: 50%;
+    width: 260px; height: 260px; border-radius: 50%;
     border: 1px solid rgba(139, 123, 110, 0.18);
-    top: -60px;
-    right: 8%;
+    top: -60px; right: 8%;
     animation: float 9s ease-in-out infinite, fadeIn 1.2s ease 0.2s forwards;
   }
-
-  /* Anillo interior */
   .shape-ring {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
+    width: 160px; height: 160px; border-radius: 50%;
     border: 1px solid rgba(139, 123, 110, 0.12);
-    top: -20px;
-    right: calc(8% + 50px);
+    top: -20px; right: calc(8% + 50px);
     animation: float 7s ease-in-out infinite reverse, fadeIn 1.2s ease 0.4s forwards;
   }
-
-  /* Barras tipo componente UI */
-  .shape-bar {
-    height: 2px;
-    background: rgba(139, 123, 110, 0.2);
-    border-radius: 2px;
-    animation: slideIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-
-  .bar-1 {
-    width: 140px;
-    bottom: 35%;
-    left: 6%;
-    animation-delay: 0.3s;
-  }
-
-  .bar-2 {
-    width: 80px;
-    bottom: calc(35% - 14px);
-    left: 6%;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-
-  .bar-3 {
-    width: 110px;
-    bottom: calc(35% - 28px);
-    left: 6%;
-    animation-delay: 0.7s;
-    opacity: 0;
-  }
-
-  /* Puntos flotantes */
-  .shape-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: rgba(139, 123, 110, 0.35);
-  }
-
-  .dot-1 {
-    top: 30%;
-    left: 20%;
-    animation: pulse 4s ease-in-out infinite, fadeIn 1s ease 0.6s forwards;
-  }
-
-  .dot-2 {
-    top: 60%;
-    right: 22%;
-    animation: pulse 5s ease-in-out infinite 1s, fadeIn 1s ease 0.8s forwards;
-  }
-
-  .dot-3 {
-    top: 20%;
-    left: 45%;
-    animation: pulse 3.5s ease-in-out infinite 0.5s, fadeIn 1s ease 1s forwards;
-  }
-
-  /* Cards tipo wireframe */
-  .shape-card {
-    border: 1px solid rgba(139, 123, 110, 0.14);
-    border-radius: 8px;
-    background: rgba(139, 123, 110, 0.04);
-  }
-
-  .card-1 {
-    width: 90px;
-    height: 60px;
-    bottom: 20%;
-    right: 28%;
-    animation: float 8s ease-in-out infinite 1s, fadeIn 1.2s ease 0.5s forwards;
-  }
-
-  .card-2 {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    top: 25%;
-    left: 32%;
-    animation: float 6s ease-in-out infinite 2s, fadeIn 1.2s ease 0.9s forwards;
-  }
-
-  /* Gradiente de fondo sutil animado */
+  .shape-bar { height: 2px; background: rgba(139, 123, 110, 0.2); border-radius: 2px; animation: slideIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  .bar-1 { width: 140px; bottom: 35%; left: 6%; animation-delay: 0.3s; }
+  .bar-2 { width: 80px; bottom: calc(35% - 14px); left: 6%; animation-delay: 0.5s; opacity: 0; }
+  .bar-3 { width: 110px; bottom: calc(35% - 28px); left: 6%; animation-delay: 0.7s; opacity: 0; }
+  .shape-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(139, 123, 110, 0.35); }
+  .dot-1 { top: 30%; left: 20%; animation: pulse 4s ease-in-out infinite, fadeIn 1s ease 0.6s forwards; }
+  .dot-2 { top: 60%; right: 22%; animation: pulse 5s ease-in-out infinite 1s, fadeIn 1s ease 0.8s forwards; }
+  .dot-3 { top: 20%; left: 45%; animation: pulse 3.5s ease-in-out infinite 0.5s, fadeIn 1s ease 1s forwards; }
+  .shape-card { border: 1px solid rgba(139, 123, 110, 0.14); border-radius: 8px; background: rgba(139, 123, 110, 0.04); }
+  .card-1 { width: 90px; height: 60px; bottom: 20%; right: 28%; animation: float 8s ease-in-out infinite 1s, fadeIn 1.2s ease 0.5s forwards; }
+  .card-2 { width: 56px; height: 56px; border-radius: 50%; top: 25%; left: 32%; animation: float 6s ease-in-out infinite 2s, fadeIn 1.2s ease 0.9s forwards; }
   .about-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse at 80% 50%, rgba(139, 123, 110, 0.08) 0%, transparent 60%),
                 radial-gradient(ellipse at 20% 80%, rgba(107, 122, 104, 0.06) 0%, transparent 50%);
     animation: shimmer 8s ease-in-out infinite alternate;
   }
+  @keyframes shimmer { from { opacity: 0.6; } to { opacity: 1; } }
+  @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideIn { from { opacity: 0; transform: scaleX(0); transform-origin: left; } to { opacity: 1; transform: scaleX(1); } }
+  @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.35; } 50% { transform: scale(1.6); opacity: 0.6; } }
 
-  @keyframes shimmer {
-    from { opacity: 0.6; }
-    to   { opacity: 1; }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-12px); }
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: scaleX(0); transform-origin: left; }
-    to   { opacity: 1; transform: scaleX(1); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.35; }
-    50%       { transform: scale(1.6); opacity: 0.6; }
-  }
-
-  /* Título sobre el hero */
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-  }
-
+  .hero-content { position: relative; z-index: 2; text-align: center; }
   .about-title {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(3.5rem, 9vw, 7rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    color: var(--hero-text);
-    margin: 0;
+    font-size: clamp(3.5rem, 9vw, 7rem); font-weight: 700;
+    letter-spacing: -0.02em; line-height: 1;
+    color: var(--hero-text); margin: 0;
   }
 
-  /* ── CONTENIDO INFERIOR ── */
-  .about-body-section {
-    padding-top: 5rem;
-    padding-bottom: 6rem;
-  }
+  .about-body-section { padding-top: 5rem; padding-bottom: 6rem; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+  @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; gap: 3rem; } }
 
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: start;
-  }
-
-  @media (max-width: 768px) {
-    .about-grid {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-  }
-
-  .about-text {
-    text-align: center;
-  }
-
-  .about-intro {
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-    line-height: 1.6;
-    color: var(--fg);
-    margin-bottom: 1.5rem;
-  }
-
-  .about-body {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--fg-muted);
-    margin-bottom: 3rem;
-  }
-
-  .about-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-  }
-
+  .about-text { text-align: center; }
+  .about-intro { font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.6; color: var(--fg); margin-bottom: 1.5rem; }
+  .about-body { font-size: 0.95rem; line-height: 1.7; color: var(--fg-muted); margin-bottom: 3rem; }
+  .about-links { display: flex; align-items: center; justify-content: center; gap: 2rem; }
   .about-cta {
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--btn-primary-text);
-    background: var(--btn-primary-bg);
-    padding: 0.75rem 2rem;
+    font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+    text-decoration: none; color: var(--btn-primary-text);
+    background: var(--btn-primary-bg); padding: 0.75rem 2rem;
     transition: opacity 0.2s, background 0.2s;
   }
-
-  .about-cta:hover {
-    background: var(--heading-h1);
-  }
-
-  .about-link {
-    font-size: 0.85rem;
-    color: var(--fg-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .about-link:hover {
-    color: #8B7B6E;
-  }
-
-  .about-image-wrapper {
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    background: var(--bg-card, #EEE9E2);
-  }
-
-  .about-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .about-cta:hover { background: var(--heading-h1); }
+  .about-link { font-size: 0.85rem; color: var(--fg-muted); text-decoration: none; transition: color 0.2s; }
+  .about-link:hover { color: #8B7B6E; }
+  .about-image-wrapper { aspect-ratio: 3 / 4; overflow: hidden; background: var(--bg-card, #EEE9E2); }
+  .about-image { width: 100%; height: 100%; object-fit: cover; }
 </style>
