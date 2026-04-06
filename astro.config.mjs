@@ -8,9 +8,11 @@ import { loadEnv } from 'vite';
 const env = loadEnv('', process.cwd(), 'STORYBLOK');
 
 const isProd = process.env.NODE_ENV === 'production';
+// En prod usamos el public token, en dev el preview token
 const storyblokToken = isProd
   ? env.STORYBLOK_PUBLIC_TOKEN
   : env.STORYBLOK_PREVIEW_TOKEN;
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,7 +23,8 @@ export default defineConfig({
   integrations: [
     storyblok({
       accessToken: storyblokToken,
-      bridge: !isProd,
+      // El bridge solo se activa dentro del iframe de Storyblok, es seguro dejarlo siempre activo
+      bridge: true,
       apiOptions: {
         region: 'eu',
       },
