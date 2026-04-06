@@ -55,7 +55,7 @@ const bloquesRender = bloques.map((b: any) => {
   <article class="project">
 
     <!-- Cover con parallax / video -->
-    <div class="project-cover-parallax">
+    <div class="project-cover-parallax" transition:name={`cover-${story.slug}`}>
       {hasCoverVideo ? (
         <video
           class="cover-video"

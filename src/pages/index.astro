@@ -51,7 +51,7 @@ const regular     = visibles.filter((t) => !t.content.featured);
 
     {featured.map((t, i) => (
       <a href={`/trabajo/${t.slug}`} class="work-jumbo reveal" style={`--i: ${i}`}>
-        <div class="jumbo-image">
+        <div class="jumbo-image" transition:name={`cover-${t.slug}`}>
           <img
             src={typeof t.content.cover === 'object' ? t.content.cover.filename : t.content.cover}
             alt={t.content.title}
@@ -64,7 +64,7 @@ const regular     = visibles.filter((t) => !t.content.featured);
         </div>
         <div class="jumbo-info">
           <span class="work-category">{t.content.categoria}</span>
-          <h2 class="jumbo-title">{t.content.title}</h2>
+          <h2 class="jumbo-title" transition:name={`title-${t.slug}`}>{t.content.title}</h2>
         </div>
       </a>
     ))}
@@ -73,7 +73,7 @@ const regular     = visibles.filter((t) => !t.content.featured);
       <div class="works-grid">
         {regular.map((t, i) => (
           <a href={`/trabajo/${t.slug}`} class="work-card reveal" style={`--i: ${i + featured.length}`}>
-            <div class="work-image-wrapper">
+            <div class="work-image-wrapper" transition:name={`cover-${t.slug}`}>
               <img
                 src={typeof t.content.cover === 'object' ? t.content.cover.filename : t.content.cover}
                 alt={t.content.title}
@@ -86,7 +86,7 @@ const regular     = visibles.filter((t) => !t.content.featured);
             </div>
             <div class="work-info">
               <span class="work-category">{t.content.categoria}</span>
-              <h2 class="work-title">{t.content.title}</h2>
+              <h2 class="work-title" transition:name={`title-${t.slug}`}>{t.content.title}</h2>
             </div>
           </a>
         ))}

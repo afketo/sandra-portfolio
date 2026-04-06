@@ -124,10 +124,9 @@ const iconPaths: Record<string, string> = {
     opacity: 0;
     transform: translateY(40px);
     transition:
-      opacity 0.75s cubic-bezier(0.22,1,0.36,1),
-      transform 0.75s cubic-bezier(0.22,1,0.36,1);
+      opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+      transform 0.55s cubic-bezier(0.22,1,0.36,1);
     transition-delay: calc(var(--i, 0) * 0.09s);
-    will-change: transform, opacity;
   }
   .service-card.visible { opacity: 1; transform: translateY(0); }
 
@@ -140,9 +139,6 @@ const iconPaths: Record<string, string> = {
     flex-direction: column;
     gap: 0;
     transition: background 0.4s ease;
-    transform-style: preserve-3d;
-    transform: perspective(800px) rotateX(0deg) rotateY(0deg);
-    will-change: transform;
   }
   .service-card:hover .card-inner {
     background: rgba(139,115,85,0.04);
@@ -156,15 +152,15 @@ const iconPaths: Record<string, string> = {
     font-family: 'Trocchi', Georgia, serif;
     font-size: 6rem;
     font-weight: 400;
-    color: rgba(28,25,22,0.04);
+    color: rgba(139,115,85,0.07);
     line-height: 1;
     pointer-events: none;
-    transition: color 0.4s ease, transform 0.4s ease;
+    transition: color 0.6s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1);
     user-select: none;
   }
   .service-card:hover .card-num {
-    color: rgba(139,115,85,0.1);
-    transform: scale(1.05) translateX(-4px);
+    color: rgba(139,115,85,0.16);
+    transform: scale(1.08) translateX(-6px) translateY(4px);
   }
 
   /* Icono SVG */
@@ -188,36 +184,39 @@ const iconPaths: Record<string, string> = {
     to { stroke-dashoffset: 0; }
   }
 
-  /* Título */
+  /* Título — protagonista de la card */
   .card-title {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
     font-weight: 400;
     color: var(--fg, #1C1916);
-    line-height: 1.2;
-    margin-bottom: 0.85rem;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
     transition: color 0.3s ease;
   }
   .service-card:hover .card-title { color: var(--accent, #8B7355); }
 
-  /* Descripción */
+  /* Descripción — token correcto, mínimo 15px */
   .card-desc {
-    font-size: 0.9rem;
-    line-height: 1.75;
-    color: rgba(28,25,22,0.55);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #4A4540;
     flex: 1;
     margin-bottom: 1.5rem;
   }
 
-  /* Línea accent que se expande al hover */
+  /* Línea accent — scaleX en lugar de width (más eficiente) */
   .card-line {
     height: 1px;
     background: var(--accent, #8B7355);
-    width: 0%;
-    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
     margin-top: auto;
   }
-  .service-card:hover .card-line { width: 100%; }
+  .service-card:hover .card-line { transform: scaleX(1); }
 
   /* ── Reducir movimiento ── */
   @media (prefers-reduced-motion: reduce) {
@@ -249,20 +248,22 @@ const iconPaths: Record<string, string> = {
 
   if (!prefersReduced) {
     document.querySelectorAll<HTMLElement>('.service-card').forEach((card) => {
-      const inner = card.querySelector<HTMLElement>('.card-inner');
-      if (!inner) return;
+      const icon = card.querySelector<HTMLElement>('.card-icon');
+      if (!icon) return;
+
+      // Cursor magnético solo sobre el icono — elegante, no SaaS-ish
+      icon.style.transition = 'transform 0.15s ease';
 
       card.addEventListener('mousemove', (e: MouseEvent) => {
         const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5 to 0.5
-        const y = (e.clientY - rect.top)  / rect.height - 0.5;
-        const tiltX = (-y * 8).toFixed(2);  // max 8deg
-        const tiltY = ( x * 8).toFixed(2);
-        inner.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(4px)`;
+        const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 12;
+        const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 12;
+        icon.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
       });
 
       card.addEventListener('mouseleave', () => {
-        inner.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+        icon.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+        icon.style.transform  = 'translate(0,0)';
       });
     });
   }
