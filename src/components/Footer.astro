@@ -1,23 +1,23 @@
 ---
+import { getSiteConfig } from '../lib/storyblok';
+
+const site = await getSiteConfig();
+const footerText = site.footerText || `© ${new Date().getFullYear()} Sandra González`;
+const linkedin   = site.linkedin   || '';
 ---
 
 <footer class="sg-footer">
   <div class="sg-footer-inner">
-    <span class="footer-name">Sandra González</span>
-    <span class="footer-year">© 2026</span>
-    <a
-      href="https://es.linkedin.com/in/sandra-gonz%C3%A1lez-19071991"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="footer-linkedin"
-      aria-label="LinkedIn de Sandra González"
-    >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <rect x="2" y="9" width="4" height="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
+    <span class="footer-text">{footerText}</span>
+    {linkedin && (
+      <a href={linkedin} target="_blank" rel="noopener noreferrer" class="footer-linkedin" aria-label="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="2" y="9" width="4" height="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    )}
   </div>
 </footer>
 
@@ -27,39 +27,19 @@
     padding: 2rem;
     background: var(--bg-secondary);
   }
-
   .sg-footer-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center; gap: 1.5rem;
   }
-
-  .footer-name {
+  .footer-text {
     font-family: 'Trocchi', Georgia, serif;
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
+    font-size: 0.8rem; letter-spacing: 0.06em;
     color: rgba(28, 25, 22, 0.4);
   }
-
-  .footer-year {
-    font-size: 0.8rem;
-    color: rgba(28, 25, 22, 0.25);
-    letter-spacing: 0.04em;
-  }
-
   .footer-linkedin {
     color: rgba(28, 25, 22, 0.35);
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    transition: color 0.3s ease, transform 0.3s ease;
+    display: flex; align-items: center;
+    text-decoration: none; transition: color 0.3s ease, transform 0.3s ease;
   }
-
-  .footer-linkedin:hover {
-    color: var(--accent-sage, #6B7A68);
-    transform: translateY(-2px);
-  }
+  .footer-linkedin:hover { color: var(--accent-sage, #6B7A68); transform: translateY(-2px); }
 </style>
